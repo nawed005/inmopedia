@@ -1,0 +1,147 @@
+<section class="profile-area" *ngIf="AllLanguage && loginData && settingsData">
+    <div class="spacer clearfix"></div>
+    <div class="ui inverted dimmer" [ngClass]="activeClass" id="workerBrowseLoader"><div class="ui loader"></div></div>
+    <div class="container-fluid" *ngIf="edit==0">
+        <div class="top-area">
+            <div class="row">
+                <div class="col-md-3 col-lg-2">
+                    <img *ngIf="!loginData.up_name" src="assets/images/user-img.png" class="img-fluid rounded-circle">
+                    <img *ngIf="loginData.up_name!== null" src="{{settingsData?.site_url+'files/'+loginData?.up_hash+'/'+loginData?.up_name}}" class="img-fluid rounded-circle">
+                </div>
+                <div class="col-md-9 col-lg-10">
+                    <div class="top-right-area">
+                        <a class="btn btn-yellow" routerLink="/post-property" *ngIf="commonService.UserData.type!='Buyer'">{{'ADD_PROPERTY' | translate:AllLanguage}}</a>
+                        <a (click)="logOut()" class="btn btn-primary-light">{{'LOGOUT' | translate:AllLanguage}}</a>
+                    </div>
+                    <h2 class="user-name">{{'PROFILE_NAME_PREFIX_TEXT' | translate:AllLanguage}} {{loginData.first_name}}</h2>
+
+                    <p class="text-1rem" [innerHTML]="loginData.about_me_en"></p>
+
+                    <ul class="user-social list-inline text-1rem" *ngIf="loginData.type!='Buyer'">
+                        <li class="list-inline-item"><a href="{{loginData.fb_url}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                        <li class="list-inline-item"><a href="{{loginData.ln_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="spacer-medium clearfix"></div>
+            <tabset #detailsTabs>
+                <tab heading="{{'FAVOURITE_PROPERTIES' | translate:AllLanguage}}" *ngIf="loginData.type=='Buyer'">
+                    <app-favourite-properties></app-favourite-properties>
+                </tab>
+                <tab heading="{{'ABOUT_ME' | translate:AllLanguage}}" *ngIf="loginData.id">
+
+                    <div class="user-top-area">
+                        <a class="btn btn-light btn-edit" href="javascript:void(0);" (click)="editProfile()"><i class="fa fa-pencil"></i></a>
+                        <h3 class="all-title">{{loginData.first_name}} {{loginData.last_name}}</h3>
+                        <ul class="address-list list-inline text-1rem">
+                            <li *ngIf="loginData.address"><i class="fa fa-map-marker"></i> {{loginData.address}}</li>
+                            <li><i class="fa fa-envelope"></i> <a href="mailto:{{loginData.email}}">{{loginData.email}}</a></li>
+                            <li *ngIf="loginData.mobile_number && loginData.mobile_number!=0"><i class="fa fa-phone"></i> <a href="tel:+593{{loginData.mobile_number}}">{{loginData.mobile_number}}</a></li>
+                            <li *ngIf="loginData.website"><i class="fa fa-globe"></i> {{loginData.website}}</li>
+                            <li *ngIf="loginData.company_name"><i class="fa fa-building-o"></i> {{loginData.company_name}}</li>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div *ngIf="loginData.type!='Buyer'">
+                        <h3 class="all-title">{{'SERVICE_AREAS' | translate:AllLanguage}}</h3>
+                        <ul class="list-inline">
+                            <li class="list-inline-item" [innerHTML]="loginData.service_areas_en"></li>
+                        </ul>
+                        <hr>
+                        <h3 class="all-title">{{'SPECIALTIES' | translate:AllLanguage}}</h3>
+                        <ul class="list-inline">
+                            <li class="list-inline-item" [innerHTML]="loginData.specialities_en"></li>
+                        </ul>
+                    </div>
+                </tab>
+                <tab heading="{{'MY_SUBSCRIPTION' | translate:AllLanguage}}" *ngIf="loginData.type!='Buyer'">
+                    <app-my-subscription [master]="AllLanguage"></app-my-subscription>
+                </tab>
+                <tab heading="{{'SETTINGS' | translate:AllLanguage}}" *ngIf="loginData.id">
+                    <app-setting-component></app-setting-component>
+                </tab>
+                <tab heading="{{'MY_PROPERTIES' | translate:AllLanguage}}" *ngIf="loginData.type!='Buyer'">
+                    <app-properties [childSettingsData]="settingsData"></app-properties>
+                </tab>
+                <tab heading="{{'GENERAL_CONTACTS' | translate:AllLanguage}}" *ngIf="loginData.type!='Buyer'">
+                    <app-general-component></app-general-component>
+                </tab>
+            </tabset>
+
+        </div>
+    </div>
+    <div class="container-fluid"  *ngIf="edit==1">
+
+        <div [hidden]="submitted2">
+            <form (ngSubmit)="updateProfile()" #registerForm="ngForm">
+                <div class="form-group">
+                    <input type="text" class="form-control"  [(ngModel)]="loginData.first_name" #first_name="ngModel" placeholder="{{'NAME_PLACEHOLDER' | translate:AllLanguage}}" name="first_name">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control"  [(ngModel)]="loginData.last_name" #last_name="ngModel" placeholder="{{'NAME_PLACEHOLDER' | translate:AllLanguage}}" name="last_name">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control"  [(ngModel)]="loginData.mobile_number" #mobileField="ngModel" placeholder="{{'MOBILE_PLACEHOLDER' | translate:AllLanguage}}" name="mobile">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control"  [(ngModel)]="loginData.about_me_en" #aboutField="ngModel" placeholder="{{'ABOUT_ME_PLACEHOLDER' | translate:AllLanguage}}" name="about"></textarea>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" name="aboutField"  [(ngModel)]="loginData.address" #addressField="ngModel" placeholder="{{'ADDRESS_PLACEHOLDER' | translate:AllLanguage}}" name="address"></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control"  [(ngModel)]="loginData.website" #website="ngModel" placeholder="{{'WEBSITE_PLACEHOLDER' | translate:AllLanguage}}" name="website">
+                </div>  
+                <div class="form-group" *ngIf="loginData.type!='Buyer'">
+                    <input type="text" class="form-control"  [(ngModel)]="loginData.company_name" #company_name="ngModel" placeholder="{{'COMPANY_NAME_PLACEHOLDER' | translate:AllLanguage}}" name="company_name">
+                </div>
+                <div class="form-group" *ngIf="loginData.type!='Buyer'">
+                    <textarea class="form-control" [(ngModel)]="loginData.service_areas_en" placeholder="Service Areas" name="{{'SERVICE_PLACEHOLDER' | translate:AllLanguage}}"></textarea>
+                </div>
+                <div class="form-group" *ngIf="loginData.type!='Buyer'">
+                    <textarea class="form-control"  [(ngModel)]="loginData.specialities_en" placeholder="Specialities" name="{{'SPECIALTIES_PLACEHOLDER' | translate:AllLanguage}}"></textarea>
+                </div>
+
+                <div class="form-group" *ngIf="loginData.type!='Buyer'">
+                    <input type="text" class="form-control"  [(ngModel)]="loginData.fb_url" placeholder="{{'FACEBOOK_URL' | translate:AllLanguage}}" name="fb_url">
+                </div>
+                <div class="form-group" *ngIf="loginData.type!='Buyer'">
+                    <input type="text" class="form-control"  [(ngModel)]="loginData.ln_url" placeholder="{{'LINKEDIN_URL' | translate:AllLanguage}}" name="ln_url">
+                </div>
+                <h5>{{'UPLOAD_PROFILE_PICTURE' | translate:AllLanguage}}</h5>
+                <img *ngFor="let url of urls" [src]="url" class="rounded mb-3" width="180">
+                    <!--<input type="file" #fileupload [(ngModel)]="myFile" name="myFile" (change)="fileChange($event)"/>-->
+
+                    <img [src]="croppedImage" />
+
+                <input type="file" (change)="fileChangeEvent($event)" />
+                <div class="row">
+                    <div class="offset-md-3 col-md-6">
+                        <image-cropper
+                            [imageChangedEvent]="imageChangedEvent"
+                            [maintainAspectRatio]="true"
+                            [aspectRatio]="4/4"
+                            [cropper]=crper
+                            [resizeToWidth]="150"
+                            format="png"
+                            (imageCroppedBase64)="imageCropped($event)"
+                            (imageLoaded)="imageLoaded()"
+                            (loadImageFailed)="loadImageFailed()"
+                            (imageCroppedFile)="imageCroppedFile($event)"
+                            ></image-cropper>
+                    </div>
+                </div>
+
+
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-yellow btn-bold" (click)="cancelUpdate()">{{'CANCEL' | translate:AllLanguage}}</button>
+                    <button type="submit" class="btn btn-yellow btn-bold" [disabled]="!registerForm.form.valid">{{'UPDATE' | translate:AllLanguage}}</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+    <div class="spacer clearfix"></div>
+</section>

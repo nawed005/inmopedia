@@ -1,0 +1,823 @@
+<link href="https://idangero.us/swiper/dist/css/swiper.min.css" rel="stylesheet">
+<section class="banner">
+    <div class="videoWrapper">
+        <video loop muted autoplay poster="assets/images/banner-poster.jpg">
+            <source src="assets/images/banner-video.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="container-fluid">
+        <div class="banner-content-section">
+            <div class="caption-small">
+                {{'banner_caption_small'| translate:banner_small_text}}
+            </div>
+            <div class="caption-big">{{'banner_caption_big'| translate:banner_big_text}}</div>
+            <div class="tab-section">
+            <div class="tabs-area">
+<ul class="nav nav-tabs">
+    <li class="nav-item" [ngClass]="{'active': tabs == 'Sell'}"><a class="nav-link" (click)="toggleTabs('Sell')" style="cursor:pointer">Buy</a></li>
+    <li class="nav-item" [ngClass]="{'active': tabs == 'Rent'}"><a class="nav-link" (click)="toggleTabs('Rent')" style="cursor:pointer">Rent</a></li>
+    <li class="nav-item"><a class="nav-link" routerLink="/post-property">{{'SELL'| translate:AllLanguage}}</a></li>
+    <li class="nav-item"><a class="nav-link" routerLink="/post-property">{{'POST_A_FREE_AD'| translate:AllLanguage}}</a></li>
+</ul>
+<div class="tab-content">
+<div [hidden]="submitted" class="form-wrapper">
+    <form (ngSubmit)="onSubmit()" #propertyForm="ngForm" >
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="location-field-area text-left">
+                        <input type="text" class="form-control input-style" name="search_autoField" placeholder="Enter Location, Project or Landmark" [(ngModel)]="search.autoField">
+                        <!--<ng-autocomplete (selected)="changeAutoField($event)" [classes]="['']" [group]="autoGroups" (keyup)="onKey($event)"></ng-autocomplete> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <button type="button" class="btn btn-light btn-toggle" (click)="propertyShow1=!propertyShow1" >{{'PROPERTY_TYPE' | translate:AllLanguage}}</button>
+
+                    <div [hidden]="propertyShow1" (click)="propertyShow1=false" class="overlay-area"></div> 
+                    <div [hidden]="propertyShow1" class="property-group text-left">
+
+                        <div *ngFor="let property_type of propertyTypes">
+                            <h5 class="title text-left">{{property_type.type_name_en}}</h5>
+                            <ul class="item-list list-unstyled">
+                                <li *ngFor="let property of property_type.prop; let i=index">
+                                    <div class="form-check">
+                                        <div class="form-checkbox">
+                                            <input class="form-check-input" type="checkbox" id="sell_{{property.id}}" name="{{property.id}}" [checked]="prop_arr.indexOf(property.id) > -1" (change)="updateSelectedCharacters($event)">
+                                            <label class="form-check-label" for="sell_{{property.id}}">
+                                                {{property.type_name_en}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <button type="button" class="btn btn-light btn-toggle" (click)="minMaxPrice=!minMaxPrice;propertyShow1=true">{{'BUDGET'| translate:AllLanguage}}</button>
+                    <div *ngIf="minMaxPrice" (click)="minMaxPrice=false" class="overlay-area"></div>
+                    <div *ngIf="minMaxPrice" class="min-max-price text-left">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field>
+                                    <mat-select placeholder="Min Price" (selectionChange)="changeMinPrice($event)" [(ngModel)]="search.minPrice" name="mip">
+                                        <mat-option *ngFor="let minPrice of minPrices" [value]="minPrice.value">
+                                            {{minPrice.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <mat-select placeholder="Max Price" (selectionChange)="changeMaxPrice($event)" [(ngModel)]="search.maxPrice" name="map">
+                                    <mat-option *ngFor="let maxPrice of maxPrices" [value]="maxPrice.value">
+                                        {{maxPrice.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn button-style" [disabled]="!propertyForm.form.valid">{{'SEARCH'| translate:AllLanguage}}</button>
+    </div>
+</div>
+</form>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<div class="spacer-medium clearfix"></div>
+<div class="add-area"><img src="assets/images/google-ads.png" class="img-fluid"><!--<ng-adsense></ng-adsense>--></div>
+<div class="spacer-medium clearfix"></div>
+<section class="featured-top-two">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 featuredtop-box" *ngFor="let property of paidProperties">
+
+                <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                    <div class="featuredtop-image-place"><img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                        <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0">
+                    </div>
+                    <div class="featuredtop-content-box">
+                        <div class="row">
+                            <div class="col-md-7">
+                                
+                                <div class="price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                <div class="price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+
+
+                                <div class="place-title">{{property.prop_title}}</div>
+                                <div class="place-address"><span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}</div>
+                            </div>
+                            <div class="col-md-5">
+                                <ul class="required-list">
+                                    <li>{{property.area}}</li>
+                                    <li><img src="assets/images/bedroom.png">{{property.no_of_bedroom}}</li>
+                                    <li><img src="assets/images/bathroom.png">{{property.no_of_bath}}</li>
+                                    <li><img src="assets/images/garage-icon-blue.png">{{property.no_of_garages}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>	
+
+        </div>
+    </div>
+</div>
+</section>
+<section class="property-place featured-place">
+    <div class="container-fluid">
+        <div class="text-center"><div class="all-page-heading">{{'FEATURE_PROPERTIES_HEADING'| translate:AllLanguage}}</div></div>
+        <div class="property-holder">
+            <div class="propreties-listing propreties-slider">
+                <div class="swiper-container-fluid" [swiper]="configTestColumn">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" *ngFor="let property of featureProperties">
+                             <div class="property-box">
+                                <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                    <div class="property-image">
+
+                                        <div class="property-image-box">
+                                            <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                            <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                        <div class="property-inner-content">
+                                            <div class="property-name">{{property.prop_title}}</div>
+                                            <div class="property-address">
+                                                <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                            </div>
+                                            <hr class="line-style">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="property-area">{{property.area}}</div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="icon-box">
+                                                        <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                        <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                        <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="property-lower-part">
+                                        <div class="row">
+                                            <div class="col-md-10 col-sm-10">
+                                                <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                                <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2">
+                                                <a href="#" class="favourites">
+                                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="spacer-medium clearfix"></div>
+</section>
+<section *ngIf="settingData && whyinmopedia" class="about-section" [ngStyle]="{'background-image':'url(' + about_section_image + ')'}">
+         <div class="container-fluid">
+        <div class="all-page-heading white-color">{{'whyInmopedia'| translate:whyinmopedia}}</div>
+        <ul class="about-list">
+            <li >
+                <div class="about-box">
+                    <div class="about-icon"><img [src]="settingData.site_url+'files/'+whyinmopedia.sec1_hash+'/'+whyinmopedia.sec1_name"></div>
+                    <div class="about-heading">{{'whyInmopediaSec1Heading'| translate:whyinmopedia}}</div>
+                    <p innerHtml="{{'whyInmopediaSec1Content'| translate:whyinmopedia}}"></p>
+                </div>
+            </li>
+            <li>
+                <div class="about-box">
+                    <div class="about-icon"><img [src]="settingData.site_url+'files/'+whyinmopedia.sec2_hash+'/'+whyinmopedia.sec2_name"></div>
+                    <div class="about-heading">{{'whyInmopediaSec2Heading'| translate:whyinmopedia}}</div>
+                    <p innerHtml="{{'whyInmopediaSec2Content'| translate:whyinmopedia}}"></p>
+                </div>
+            </li>
+            <li>
+                <div class="about-box">
+                    <div class="about-icon"><img [src]="settingData.site_url+'files/'+whyinmopedia.sec3_hash+'/'+whyinmopedia.sec3_name"></div>
+                    <div class="about-heading">{{'whyInmopediaSec3Heading'| translate:whyinmopedia}}</div>
+                    <p innerHtml="{{'whyInmopediaSec3Content'| translate:whyinmopedia}}"></p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- City 1 Properties -->
+<!-- City 1 Properties -->
+<section class="property-place family-place" *ngIf="city1Properties">
+    <div class="container-fluid">
+        <div class="all-page-heading gray">{{'HOME_PAGE_PROPERTIES_IN_CITIES_TEXT'| translate:AllLanguage}} {{city1Properties[0].city_name}} (<a [routerLink]="['/city-property-listing',city1Properties[0].city_slug]">See {{ city1Count }} <span *ngIf="city1Count>1">properties</span> <span *ngIf="city1Count<=1">property</span></a>)</div>
+        <div class="property-holder">
+            <div class="propreties-listing propreties-slider">
+                <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" >
+                    <div ngxSlickItem *ngFor="let property of city1Properties" class="slide">
+                         <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                        <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-10 col-sm-10">
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </ngx-slick>
+            </div>
+        </div>
+    </div>
+    <div class="spacer-medium clearfix"></div>
+</section>
+<!-- City 1 Properties End-->
+<!-- City 1 Properties End-->
+
+
+<!-- City 2 Properties -->
+<!-- City 2 Properties -->
+<section class="property-place luxury-place" *ngIf="city2Properties">
+    <div class="container-fluid">
+        <div class="property-holder">
+            <div class="all-page-heading gray">{{'HOME_PAGE_PROPERTIES_IN_CITIES_TEXT'| translate:AllLanguage}} {{city2Properties[0].city_name}} (<a [routerLink]="['/city-property-listing',city2Properties[0].city_slug]">See {{ city2Count }} <span *ngIf="city2Count>1">properties</span> <span *ngIf="city2Count<=1">property</span> </a>)</div>
+            <div class="propreties-listing propreties-slider">
+                <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" >
+                    <div ngxSlickItem *ngFor="let property of city2Properties" class="slide">
+                         <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                        <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-10 col-sm-10">
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>	
+                    </div>
+                </ngx-slick>
+            </div>
+        </div>
+    </div>
+    <div class="spacer-medium clearfix"></div>
+</section>
+<!-- City 2 Properties End -->
+<!-- City 2 Properties End -->
+
+<!-- City 3 Properties -->
+<!-- City 3 Properties -->
+<section class="property-place appartment-place" *ngIf="city3Properties">
+    <div class="container-fluid">
+        <div class="property-holder">
+            <div class="all-page-heading gray">{{'HOME_PAGE_PROPERTIES_IN_CITIES_TEXT'| translate:AllLanguage}} {{city3Properties[0].city_name}} (<a [routerLink]="['/city-property-listing',city3Properties[0].city_slug]">See {{ city3Count }} <span *ngIf="city3Count>1">properties</span> <span *ngIf="city3Count<=1">property</span></a>)</div>
+            <div class="propreties-listing propreties-slider">
+                <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" >
+                    <div ngxSlickItem *ngFor="let property of city3Properties" class="slide">
+                         <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                        <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-10 col-sm-10">
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </ngx-slick>
+            </div>
+        </div>
+    </div>
+    <div class="spacer-medium clearfix"></div>
+</section>
+
+<!-- City 3 Properties End-->
+<!-- City 3 Properties End-->
+
+<!-- City 4 Properties -->
+<!-- City 4 Properties -->
+<section class="property-place family-place" *ngIf="city4Properties">
+    <div class="container-fluid">
+        <div class="property-holder">
+            <div class="all-page-heading gray">{{'HOME_PAGE_PROPERTIES_IN_CITIES_TEXT'| translate:AllLanguage}} {{city4Properties[0].city_name}} (<a [routerLink]="['/city-property-listing',city4Properties[0].city_slug]">See {{ city4Count }} <span *ngIf="city4Count>1">properties</span> <span *ngIf="city4Count<=1">property</span></a>)</div>
+            <div class="propreties-listing propreties-slider">
+                <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" >
+                    <div ngxSlickItem *ngFor="let property of city4Properties" class="slide">
+                         <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                        <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-10 col-sm-10">
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </ngx-slick>
+            </div>
+        </div>
+    </div>
+    <div class="spacer-medium clearfix"></div>
+</section>
+<!-- City 4 Properties End -->
+<!-- City 4 Properties End -->
+
+<!-- City 5 Properties -->
+<!-- City 5 Properties -->
+<section class="property-place luxury-place" *ngIf="city5Properties">
+    <div class="container-fluid">
+        <div class="property-holder">
+            <div class="all-page-heading gray">{{'HOME_PAGE_PROPERTIES_IN_CITIES_TEXT'| translate:AllLanguage}} {{city5Properties[0].city_name}} (<a [routerLink]="['/city-property-listing',city5Properties[0].city_slug]">See {{ city5Count }} <span *ngIf="city5Count>1">properties</span> <span *ngIf="city5Count<=1">property</span></a>)</div>
+            <div class="propreties-listing propreties-slider">
+                <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" >
+                    <div ngxSlickItem *ngFor="let property of city5Properties" class="slide">
+                         <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                        <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-10 col-sm-10">
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </ngx-slick>
+            </div>
+        </div>
+    </div>
+    <div class="spacer-medium clearfix"></div>
+</section>
+<!-- City 5 Properties End-->
+<!-- City 5 Properties End-->
+
+<!-- City 6 Properties -->
+<!-- City 6 Properties -->
+<section class="property-place appartment-place" *ngIf="city6Properties">
+    <div class="container-fluid">
+        <div class="property-holder">
+            <div class="all-page-heading gray">{{'HOME_PAGE_PROPERTIES_IN_CITIES_TEXT'| translate:AllLanguage}} {{city6Properties[0].city_name}} (<a [routerLink]="['/city-property-listing',city6Properties[0].city_slug]">See {{ city6Count }} <span *ngIf="city6Count>1">properties</span> <span *ngIf="city6Count<=1">property</span></a>)</div>
+            <div class="propreties-listing propreties-slider">
+                <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" >
+                    <div ngxSlickItem *ngFor="let property of city6Properties" class="slide">
+                         <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                        <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-10 col-sm-10">
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </ngx-slick>
+            </div>
+        </div>
+    </div>
+    <div class="spacer-medium clearfix"></div>
+</section>
+<!-- City 6 Properties End-->
+<!-- City 6 Properties End-->
+
+<!-- City Other Properties -->
+<!-- City Other Properties -->
+<section class="property-place family-place" *ngIf="otherProperties">
+    <div class="container-fluid">
+        <div class="property-holder">
+            <div class="all-page-heading gray">{{'HOME_PAGE_PROPERTIES_IN_CITIES_TEXT'| translate:AllLanguage}} {{'OTHER'| translate:AllLanguage}} (<a [routerLink]="['/city-property-listing','other']">See {{ cityotherCount }} <span *ngIf="cityotherCount>1">properties</span> <span *ngIf="cityotherCount<=1">property</span></a>)</div>
+            <div class="propreties-listing propreties-slider">
+                <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" >
+                    <div ngxSlickItem *ngFor="let property of otherProperties" class="slide">
+                         <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                        <img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-10 col-sm-10">
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </ngx-slick>
+            </div>
+        </div>
+    </div>
+    <div class="spacer-medium clearfix"></div>
+</section>
+<!-- City Other Properties End-->
+<!-- City Other Properties End-->
+
+<section class="city-place">
+    <div class="container-fluid">
+        <div class="all-page-heading">{{'TOP_CITIES'| translate:AllLanguage}}</div>
+        <ul class="city-list">
+            <li *ngFor="let city of cities">
+                <!--<a routerLink="/property-listings/Sell/{{city.province_slug + ',' + city.city_slug}}">  -->
+                <a style="cursor: pointer;" (click)="onBrowse(city.province_slug + ',' + city.city_slug)">{{city.city_name}}   
+                    <div class="inner-box">
+                        <div class="inner-box-area"><img [src]="settingData.site_url+'files/'+city.hash+'/'+city.name" class="img-fluid"></div>
+                        <div class="float-area">
+                            <span class="city-name">{{city.city_name}}</span>
+                            <!--<span class="city-count">{{city.citycount}}</span>-->
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="browse-place">
+    <div class="container-fluid">
+        <div class="all-page-heading">{{'BROWSE_BY_LOCATION'| translate:AllLanguage}}</div>
+        <div class="location-inner-place">
+            <div class="checkbox hidden">
+                <label>
+                    <input type="checkbox" [(ngModel)]="oneAtATime" [checked]="oneAtATime">
+                    Open only one at a time
+                </label>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <accordion [closeOthers]="oneAtATime">
+                        <accordion-group *ngFor="let province of provinces | slice:0:8; let i=index" [heading]="province.province_name">
+                            <div *ngFor="let city of province.cities">
+                                <!--<a routerLink="/property-listings/Sell/{{province.province_slug + ',' + city.city_slug}}">{{city.city_name}}</a>-->
+                                <a style="cursor: pointer;" (click)="onBrowse(province.province_slug + ',' + city.city_slug)">{{city.city_name}}</a>
+                            </div>
+                        </accordion-group>
+                    </accordion>
+                </div>
+                <div class="col-md-4">
+                    <accordion [closeOthers]="oneAtATime">
+                        <accordion-group *ngFor="let province of provinces | slice:8:16; let i=index" [heading]="province.province_name">
+                            <div *ngFor="let city of province.cities">
+                              <!--  <a routerLink="/property-listings/Sell/{{province.province_slug + ',' + city.city_slug}}">{{city.city_name}}</a> -->
+                              <a style="cursor: pointer;" (click)="onBrowse(province.province_slug + ',' + city.city_slug)">{{city.city_name}}</a>
+                            </div>
+                        </accordion-group>
+                    </accordion>
+                </div>
+                <div class="col-md-4">
+                    <accordion [closeOthers]="oneAtATime">
+                        <accordion-group *ngFor="let province of provinces | slice:16:24; let i=index" [heading]="province.province_name">
+                            <div *ngFor="let city of province.cities">
+                                <!--<a routerLink="/property-listings/Sell/{{province.province_slug + ',' + city.city_slug}}">{{city.city_name}}</a> -->
+                                <a style="cursor: pointer;" (click)="onBrowse(province.province_slug + ',' + city.city_slug)">{{city.city_name}}</a>
+                            </div>
+                        </accordion-group>
+                    </accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="partners-place">
+    <div class="container-fluid">
+        <div class="all-page-heading">{{'OUR_PARTNERS'| translate:AllLanguage}}</div>
+        <ngx-slick class="carousel" #slickModal="slick-modal" [config]="slideConfig" >
+            <div ngxSlickItem *ngFor="let partner of partners" class="slide">
+                 <div class="part-logo">
+                    <a [routerLink]="['/relator',partner.user_name]"><img src="{{commonService.getImgSrc(partner)}}" class="img-fluid"></a>
+
+                </div>
+            </div>
+        </ngx-slick>
+    </div>
+</section>
+<section class="best-agents text-center" [ngStyle]="{'background-image':'url(' + agents_background + ')'}" #footerTag>
+         <div class="container-fluid">
+        <div class="spacer"></div>
+        <div class="all-page-heading">{{'THE_BEST_AGENTS'| translate:AllLanguage}}</div>
+        <ul class="agents-list">
+            <li *ngFor="let agent of agents">
+                <div class="image-box">
+                    <a [routerLink]="['/agent',agent.user_name]">
+
+                        <img *ngIf="!agent.name" src="assets/images/user-img.png" class="img-fluid">
+                        <img *ngIf="agent.name" src="{{commonService.getImgSrc(agent)}}" class="img-fluid">
+                    </a>
+                </div>
+                <h4 class="title"><a [routerLink]="['/agent',agent.user_name]">{{agent.user_name}}</a></h4>
+                <h5 class="position">{{agent.type}}</h5>
+                <h5><rating [(ngModel)]="agent.rate" [max]="max" [readonly]="isReadonlyUser"></rating></h5>
+                <div class="text-center">
+                    <a class="btn btn-primary btn-sm btn-contact" (click)="openModal(template)" style="color: #fff;">{{'CONTACT_BUTTON'| translate:AllLanguage}}</a>
+                </div>
+            <ng-template #template>
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'CONTACT'| translate:AllLanguage}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div [hidden]="submitted">
+                        <form (ngSubmit)="contactSubmit(contactForm)" #contactForm="ngForm">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="to_user_id"  [(ngModel)]="agent.id" #to_user_id="ngModel">
+                                <input type="email" class="form-control" email name="email"  [(ngModel)]="email" #emailField="ngModel" placeholder="{{'EMAIL_PLACEHOLDER'| translate:AllLanguage}}">
+                                <div  class="emailinvalid" *ngIf="emailField.invalid && emailField.touched">
+                                      <div  *ngIf="emailField.hasError('email')" class="alert alert-danger">
+                                        {{'EMAIL_INVALID_ERROR_MSG'| translate:AllLanguage}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="name"
+                                       required
+                                       [(ngModel)]="cmodel.name" name="name"
+                                       #name="ngModel" placeholder="{{'NAME_PLACEHOLDER'| translate:AllLanguage}}">
+                                       <div [hidden]="name.valid || name.pristine"
+                                       class="alert alert-danger">
+                                       {{'NAME_ERROR_MSG'| translate:AllLanguage}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="phone"
+                                   required
+                                   [(ngModel)]="cmodel.phone" name="phone"
+                                   #phone="ngModel" placeholder="{{'PHONE_PLACEHOLDER'| translate:AllLanguage}}">
+                                   <div [hidden]="phone.valid || phone.pristine"
+                                   class="alert alert-danger">
+                                   {{'PHONE_ERROR_MESSAGE'| translate:AllLanguage}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="5" id="message" [(ngModel)]="cmodel.message" name="message" placeholder="{{'MESSAGE_PLACEHOLDER'| translate:AllLanguage}}"></textarea>
+                    </div>
+                    <!--<div class="form-group">
+                    <recaptcha [formControl]="myRecaptcha" (scriptLoad)="onScriptLoad()" (scriptError)="onScriptError()"></recaptcha>
+                    </div>-->
+                    <button type="submit" class="btn btn-primary full" [disabled]="!contactForm.form.valid">{{'SEND_MESSAGE'| translate:AllLanguage}}</button>
+                </form>
+            </div>
+        </div>
+    </ng-template>
+    <!--<ul class="social list-inline">
+            <li class="list-inline-item"><a href="{{agent.fb_url}}"><i class="fa fa-facebook-square"></i></a></li>
+    </ul>-->
+    </li>
+</ul>
+</div>
+</section>
+

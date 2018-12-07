@@ -1,0 +1,232 @@
+import { Component, OnInit, ViewChild, AfterViewInit  } from '@angular/core';
+import { Property }    from './property';
+
+import { CommonServiceService } from '../services/common-service.service';
+
+import { GoogleMapsAPIWrapper, AgmMap, LatLngBounds, LatLngBoundsLiteral} from '@agm/core';
+
+declare var google: any
+
+@Component({
+  selector: 'app-property-listings',
+  templateUrl: './property-listings.component.html',
+  styleUrls: ['./property-listings.component.css']
+})
+export class PropertyListingsComponent implements OnInit {
+
+  
+  @ViewChild('AgmMap') agmMap: AgmMap;
+  settingsData={};
+  property_types = ['Property Type', '2', '3', '4'];
+  budgets = ['Budget', '2', '3', '4'];
+  model = new Property('', '', '');
+  submitted = false;
+  onSubmit() { this.submitted = true; }
+  properties = [
+		{
+		'images':'assets/images/pro1.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro2.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro3.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro4.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro5.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro6.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro7.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro8.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro9.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro10.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro11.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro12.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro13.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		},
+		{
+		'images':'assets/images/pro14.jpg',
+		'price':'225,000',
+		'title':'South Celler Court',
+		'address':'2492 Islington Ave, Toronto, Ontario M9V 2X5',
+		'area':'125 sqft',
+		'bedroom':'4',
+		'bathroom':'2'
+		}
+	];
+  zoom: number = 8;
+  
+  // initial center position for the map
+  lat: number = 51.673858;
+  lng: number = 7.815982;
+
+  clickedMarker(label: string, index: number) {
+    console.log(`clicked the marker: ${label || index}`)
+  }
+  
+ 
+  
+  markerDragEnd(m: marker, $event: MouseEvent) {
+    console.log('dragEnd', m, $event);
+  }
+  
+  markers: marker[] = [
+	  {
+		  latitude: 51.673858,
+		  longitude: 7.815982,
+		  label: 'A',
+		  draggable: true
+	  },
+	  {
+		  latitude: 51.373858,
+		  longitude: 7.215982,
+		  label: 'B',
+		  draggable: false
+	  },
+	  {
+		  latitude: 51.723858,
+		  longitude: 7.895982,
+		  label: 'C',
+		  draggable: true
+	  }
+  ]
+  constructor(private commonService: CommonServiceService) {
+
+    this.commonService.getData().subscribe((res)=>{
+        
+        this.settingsData=res.data;
+        console.log(this.settingsData,' after parse all properties settingsData');
+
+    });
+
+    this.commonService.get('getAllProperties').subscribe((res)=>{
+        //let Jres=JSON.parse(res._body);
+        console.log(res,' after parse all properties');
+        this.properties=res.data;
+        this.markers=res.data;
+       console.log(this.markers,' after parse all markers');
+    });
+
+   }
+
+  ngOnInit() {
+
+  }
+
+  ngAfterViewInit() {
+    console.log(this.agmMap);
+    this.agmMap.mapReady.subscribe(map => {
+      const bounds: LatLngBounds = new google.maps.LatLngBounds();
+      for (const mm of this.markers) {
+        bounds.extend(new google.maps.LatLng(mm.latitude, mm.longitude));
+      }
+      map.fitBounds(bounds);
+    });
+  }
+
+
+
+}
+interface marker {
+	latitude: number;
+	longitude: number;
+	label?: string;
+	draggable: boolean;
+}
+

@@ -1,0 +1,23 @@
+<section class="tutorials">
+	<div class="spacer clearfix"></div>
+	<div class="container" *ngIf="tutorials">
+            <div *ngFor="let tutorial of tutorials">
+                <h2 class="all-page-heading"> {{tutorial?.user_type}} </h2>
+		<ul class="tutorials-list list-inline">
+                    <li *ngFor="let obj of tutorial.tutorial">
+                            <div class="video-box">
+                                    <div class="videoWrapper">
+                                        <iframe [src]="getSantizeUrl(obj?.embed_url)" frameborder="0" controls="0"></iframe>
+                                    </div>
+                                    <a [routerLink]="['/tutorial-details',obj?.slug]"></a>
+                            </div>
+                            <h4 class="title"><a href="#">{{obj?.title}}</a></h4>
+                            <p [innerHTML]="obj?.description_en | slice:0:200"></p>
+                    </li>
+                      
+		</ul>
+                <div *ngIf="tutorial.tutorial.length > 3" class="text-center clearfix"><a class="btn btn-primary" [routerLink]="['/tutorial-list',tutorial?.user_type]">More Tutorials</a></div>
+                <div class="spacer clearfix"></div>  
+            </div>    
+	</div> 
+</section>

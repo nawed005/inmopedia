@@ -1,0 +1,15 @@
+<section class="tutorial-details">
+    <div class="spacer clearfix"></div>
+    <div class="container" *ngIf="tutorial">
+        <div class="videoWrapper">
+            <iframe [src]="getSantizeUrl(tutorial?.embed_url)" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <h2 class="title">{{'tutorialTitle' | translate:tutorial}}</h2>
+        <p [innerHTML]="'tutorialDesc' | translate:tutorial"></p>
+    </div>
+    <div class="container" *ngIf="!tutorial && AllLanguage">
+        <p *ngIf="commonService.userLoggedIn" style="text-align: center;"><a routerLink="/profile">{{'GO_TO_PROFILE' | translate:AllLanguage }}</a></p>
+        <p *ngIf="!commonService.userLoggedIn" style="text-align: center;"><a routerLink="/sign-in">{{'GO_TO_SIGNIN' | translate:AllLanguage }}</a></p>
+    </div>
+    <div class="spacer clearfix"></div>
+</section>

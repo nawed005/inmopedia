@@ -1,0 +1,28 @@
+<section class="profile-area properties-page-area" *ngIf="property_lists">
+    <div class="container-fluid">
+        <div class="spacer-small clearfix"></div>
+        <div class="spacer-small clearfix"></div>
+        <table class="properties-table table">
+            <thead class="table thead-primary table-striped">
+                <tr>
+                    <th></th>
+                    <th>Property</th>
+                    <th>Added on</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let property_list of property_lists">
+                    <td><img [src]="settingsData?.site_url+'files/'+property_list?.cover_image_file[0].hash+'/'+property_list?.cover_image_file[0].name" class="img-fluid" style="height: 60px"></td>
+                    <td><a [routerLink]="['/property-listing-details',property_list?.prop_slug]">{{property_list?.prop_title}}</a></td>
+                    <td>{{property_list?.date}}</td>
+                    <td>
+                        <a (click)="removeProduct(property_list?.id,property_list?.prop_title)" class="btn btn-link text-dark"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+                <tr *ngIf="property_lists?.length == 0">No record found.</tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="spacer clearfix"></div>
+</section>

@@ -1,0 +1,338 @@
+<meta property="og:title" content="Example Page">
+<meta property="og:image" content="http://example.com/images/photo.jpg">
+<meta property="og:description" content="This is just an example page.">
+<meta property="og:url" content="http://example.com/page.html">
+<section class="property-listing-details property-listing-details-area" *ngIf="AllLanguage">
+    <div class="property-listing-details-banner" >
+        <div>
+            <div class="button-group">
+                <a (click)="shareBox = !shareBox" class="btn btn-light btn-share"><img src="assets/images/share-icon.png"> {{'SHARE' | translate:AllLanguage}}</a>
+                <a href="javascript:void(0);" class="btn btn-light" (click)="saveFavourite()" *ngIf="!commonService.userLoggedIn || loginData?.type=='Buyer'"><img src="assets/images/heart-icon.png">
+                    <!--<i class="fa fa-heart" *ngIf="is_fav==1"></i><i class="fa fa-heart-o" *ngIf="is_fav==0"></i>--> {{'SAVE_TO_FAVOURITES' | translate:AllLanguage}}</a>
+            </div>
+            <!--
+            <div *ngIf="shareBox" class="share-box">
+                <div class="inner-box">
+                    <a class="close" (click)="shareBox = false"><i class="fa fa-times"></i></a>
+                    <ul class="share-list social-icons">
+                        <li>
+                        <share-button class="btn btn-secondary facebook" [url]="settingData?.site_url+'api/getShareData/'+propertyDetails.prop_slug" [button]="fbButton" [title]="propertyDetails.prop_title"></share-button> {{'FACEBOOK' | translate:AllLanguage}}
+                        </li>
+                        <li>
+                        <share-button class="btn btn-secondary linkedin"  [url]="settingData?.site_url+'api/getShareData/'+propertyDetails.prop_slug" [button]="lnButton" [title]="propertyDetails.prop_title"></share-button> {{'LINKEDIN' | translate:AllLanguage}}
+                        </li>
+                        <li>
+                            <a  href="https://api.whatsapp.com/send?text={{commonService.realRath}}property-listing-details/{{propertyDetails.prop_slug}}" data-action="share/whatsapp/share" class="btn btn-default whatsapp-btn" target="_blank" title="share"><i class="fa fa-whatsapp"></i></a> {{'WHATSAPP' | translate:AllLanguage}}
+                        </li>
+                        <li>
+                        <share-button class="btn btn-secondary google-plus"  [url]="settingData?.site_url+'api/getShareData/'+propertyDetails.prop_slug" [button]="gButton" [title]="propertyDetails.prop_title"></share-button>{{'GOOGLE_PLUS' | translate:AllLanguage}}
+                        </li>
+                        <li>
+                        <share-button class="btn btn-secondary twitter"  [url]="settingData?.site_url+'api/getShareData/'+propertyDetails.prop_slug" [button]="tButton" [title]="propertyDetails.prop_title"></share-button> {{'TWITTER' | translate:AllLanguage}}
+                        </li>
+
+                        <li>
+                            <a  href="https://api.whatsapp.com/send?phone={{propertyDetails.mobile_number}}&text={{commonService.realRath}}property-listing-details/{{propertyDetails.prop_slug}}" data-action="share/whatsapp/share" class="btn btn-default whatsapp-btn-text" target="_blank" title="share with agent" *ngIf="propertyDetails.mobile_number"> {{'CONTACT_AGENT_VIA_WHATSAPP_DIRECTLY' | translate:AllLanguage}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="close-box" (click)="shareBox = false"></div>
+            </div>  -->
+        </div>
+        <div class="banner-block" *ngIf="galleryImages">
+            <ngx-gallery class="ngx-gallery" [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+        </div>
+        <!--<div class="banner-block-no-image" *ngIf="galleryImages.length==0" style="background:url(assets/images/no-banner-image.jpg) no-repeat center center; background-size: cover;">
+        </div>  -->
+    </div>
+    <div class="spacer-medium clearfix"></div>
+    <div class="container-fluid">
+        <div class="ui inverted dimmer" [ngClass]="activeClass" id="workerBrowseLoader"><div class="ui loader"></div></div>
+        <div class="property-listing-details-grid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2 class="title">{{propertyDetails?.prop_title}}</h2>
+                    <h6>{{propertyDetails?.prop_address}}</h6>
+                    <ul class="options">
+                        <li><img src="assets/images/bedroom3-gray.png"> {{propertyDetails?.no_of_bedroom}}</li>
+                        <li><img src="assets/images/bathroom3-gray.png"> {{propertyDetails?.no_of_bath}}</li>
+                        <li><img src="assets/images/garage-icon.png"> {{propertyDetails?.no_of_garages}}</li>
+                        <li><img src="assets/images/kitchen-gray.png"> {{propertyDetails?.no_of_half_bath}}</li>
+                    </ul>
+                    <hr *ngIf="urls.length>0">
+                    <h6 *ngIf="urls.length>0" class="heading-small text-bold">{{'VIDEOES' | translate:AllLanguage}}</h6>
+                    <div *ngIf="urls.length>0" class="row video-list">
+                        <div class="col-md-6" *ngFor="let url of urls; let i=index">
+                             <div class="videoWrapper" *ngIf="i<2">
+                                <iframe [src]="url" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<p *ngIf="urls.length==0">{{'NO_VIDEO_FOUND' | translate:AllLanguage}}</p> -->
+                    <!--<h3>Property Features</h3>
+                    <div class="spacer-medium clearfix"></div>
+                    <ul class="feature-list">
+                            <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                            <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                            <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                            <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                            <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                            <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
+                    </ul>-->
+                    <hr>
+                    <h6 class="heading-small text-bold">{{'PROPERTY_DESCRIPTION' | translate:AllLanguage}}</h6>
+
+                    <div [innerHTML]="propertyDetails.prop_desc_en">
+
+                    </div>
+                    <hr>
+                    <h6 class="heading-small text-bold">{{'OTHER_CHRACTERISTICS' | translate:AllLanguage}}</h6>
+                    <ul class="list-inline list-topic">
+                        <li *ngFor="let characteristics of other_character" class="list-inline-item">{{ characteristics }}</li>
+                        <li *ngFor="let charac of character_other" class="list-inline-item">{{ charac }}</li>
+                    </ul>
+                    <hr>
+                    <h6 class="heading-small text-bold">{{'INTERESTED_IN_PROPERTY' | translate:AllLanguage}}</h6>
+                    <a [scrollTo]="leedTag" [scrollDuration]="1000" [scrollOffset]="-150" style="color: #fff;" class="btn btn-primary">{{'REQUEST_DETAILS' | translate:AllLanguage}}</a>
+                    <hr>
+                </div>
+                <div class="col-lg-4">
+                    <div class="right-side-inner-box">
+
+                        <h2 class="price"><small>$</small> <span *ngIf="propertyDetails?.sell_or_rent=='Sell'">{{propertyDetails?.price_Sell}}</span><span *ngIf="propertyDetails?.sell_or_rent=='Rent'">{{propertyDetails?.price_rent}}</span></h2>
+
+                        <div class="contact-form-area">
+                            <div class="top-area">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h6>{{'POSTED_BY' | translate:AllLanguage}}</h6>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <small>{{propertyDetails?.created_on}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-area">
+                                <div class="row">
+                                    <div class="col-5 col-sm-4">
+                                        <a [routerLink]="['/agent',propertyDetails?.user_name]">
+                                            <div class="image-box">
+                                                <img *ngIf="!propertyDetails?.name" src="assets/images/user-img.png" class="img-fluid rounded-circle">
+                                                <img *ngIf="propertyDetails?.name!== null" src="{{commonService.getImgSrc(propertyDetails)}}" class="img-fluid rounded-circle">
+                                            </div>
+                                        </a>
+
+                                    </div>
+                                    <div class="col-7 col-sm-8">
+                                        <h6>
+                                            <a [routerLink]="['/agent',propertyDetails?.user_name]" class="text-dark" *ngIf="propertyDetails.type=='Agent'">{{propertyDetails.user_name}}</a>
+                                            <a [routerLink]="['/owner',propertyDetails?.user_name]" class="text-dark" *ngIf="propertyDetails.type=='Owner'">{{propertyDetails.user_name}}</a>
+                                            <a [routerLink]="['/real-estate-pro',propertyDetails?.user_name]" class="text-dark" *ngIf="propertyDetails.type=='Real Estate Pro'">{{propertyDetails.user_name}}</a>
+                                            <a [routerLink]="['/real-estate-company',propertyDetails?.user_name]" class="text-dark" *ngIf="propertyDetails.type=='Real Estate Company'">{{propertyDetails.user_name}}</a>
+                                            <a [routerLink]="['/project-developer',propertyDetails?.user_name]" class="text-dark" *ngIf="propertyDetails.type=='Project Developer'">{{propertyDetails.user_name}}</a>
+                                        </h6>
+                                        <!--<small class="text-primary">ID: XZS123</small>-->
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item" *ngIf="is_show_phone==1"><strong>{{'CALL' | translate:AllLanguage}} <a href="tel:+{{propertyDetails.owner_mobile}}">{{propertyDetails.owner_mobile}}</a></strong></li>
+                                            <form (ngSubmit)="emailSubmit(f)" #f="ngForm" *ngIf="is_show_email_form==1">
+                                                <div class="form-group">
+                                                    <input type="email" required name="email" ngModel class="form-control" email placeholder="{{'EMAIL_PLACEHOLDER' | translate:AllLanguage}}">
+                                                    <span *ngIf="is_valid==1" style="color:red;font-weight:bold;">{{'EMAIL_INVALID_ERROR_MSG' | translate:AllLanguage}}</span>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary" [disabled]="f.invalid">{{'SEND' | translate:AllLanguage}}</button>
+                                            </form>
+                                            <li class="list-inline-item" (click)="is_show_email_form=1;" *ngIf="is_show_phone==0 && is_show_email_form==0"><a href="javascript:void(0);" class="btn btn-yellow">{{'VIEW_PHONE' | translate:AllLanguage}}</a></li>
+                                            <li class="list-inline-item" (click)="is_show_phone=0" *ngIf="is_show_phone==1"><a href="javascript:void(0);" class="btn btn-yellow">{{'HIDE_PHONE' | translate:AllLanguage}}</a></li>
+
+                                            <!--<li class="list-inline-item" *ngIf="is_show_phone==1"><strong>Call: <a href="tel:+{{propertyDetails.owner_mobile}}">+{{propertyDetails.owner_mobile}}</a></strong></li>
+                                            <li class="list-inline-item" (click)="is_show_email_form=1" *ngIf="is_show_phone==0"><a href="javascript:void(0);" class="btn btn-yellow">View Phone</a></li>
+                                            <li class="list-inline-item" (click)="is_show_phone=0" *ngIf="is_show_phone==1"><a href="javascript:void(0);" class="btn btn-yellow">Hide Phone</a></li>-->
+                                        </ul>
+                                    </div>
+                                </div>
+                                <h5 *ngIf="AllLanguage" class="contact-title text-center" #leedTag>{{'CONTACT_ME' | translate:AllLanguage}}</h5>
+                                <div [hidden]="submitted">
+                                    <form (ngSubmit)="contactSubmit(contactForm)" #contactForm="ngForm" *ngIf="AllLanguage">
+                                        <div class="form-group">
+                                            <input type="hidden" class="form-control" name="to_user_id"  [(ngModel)]="propertyDetails.added_by" #to_user_id="ngModel">
+                                            <input type="email" class="form-control" email name="email"  [(ngModel)]="email" #emailField="ngModel" placeholder="{{'EMAIL_PLACEHOLDER' | translate:AllLanguage}}">
+                                            <div  class="emailinvalid" *ngIf="emailField.invalid && emailField.touched">
+                                                  <div  *ngIf="emailField.hasError('email')" class="alert alert-danger">
+                                                    {{'EMAIL_INVALID_ERROR_MSG' | translate:AllLanguage}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="name"
+                                                   required
+                                                   [(ngModel)]="model.name" name="name"
+                                                   #name="ngModel" placeholder="{{'NAME_PLACEHOLDER' | translate:AllLanguage}}">
+                                                   <div [hidden]="name.valid || name.pristine"
+                                                   class="alert alert-danger">
+                                                   {{'NAME_ERROR_MSG' | translate:AllLanguage}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="phone"
+                                               required
+                                               [(ngModel)]="model.phone" name="phone"
+                                               #phone="ngModel" placeholder="{{'PHONE_PLACEHOLDER' | translate:AllLanguage}}">
+                                               <div [hidden]="phone.valid || phone.pristine"
+                                               class="alert alert-danger">
+                                               {{'PHONE_ERROR_MESSAGE' | translate:AllLanguage}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="5" id="message" [(ngModel)]="model.message" name="message" placeholder="{{'MESSAGE_PLACEHOLDER' | translate:AllLanguage}}"></textarea>
+                                </div>
+                                <!--<div class="form-group">
+                                <recaptcha [formControl]="myRecaptcha" (scriptLoad)="onScriptLoad()" (scriptError)="onScriptError()"></recaptcha>
+                                </div>-->
+                                <button type="submit" class="btn btn-primary full btn-send" [disabled]="!contactForm.form.valid">{{'SEND_MESSAGE' | translate:AllLanguage}}</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="spacer-medium clearfix"></div>
+                    <div class="text-center"><a routerLink="/terms-conditions" class="text-dark">{{'TERMS_AND_CONDITIONS' | translate:AllLanguage}}</a></div>
+                </div>
+                <!--<div class="spacer-medium clearfix"></div>
+                <div class="gray-block details-block-gapping text-center">
+                        <a href="javascript:void(0);" class="text-dark" (click)="saveFavourite()"><i class="fa fa-star text-primary" *ngIf="is_fav==1"></i><i class="fa fa-star-o text-primary" *ngIf="is_fav==0"></i> <strong>{{'SAVE_TO_FAVOURITES' | translate:AllLanguage}}</strong></a>
+                </div>-->
+                <div class="spacer-small clearfix"></div>
+                <div class="gray-block details-block-gapping text-center">
+                    <a (click)="openModal(template)" class="text-dark" style="cursor:pointer;"><i class="fa fa-info-circle text-primary"></i> <strong>{{'REPORT_LISTING' | translate:AllLanguage}}</strong></a>
+                </div>
+                <!--<share-buttons [title]="'title'" [description]="'description'" [image]="settingData?.site_url+'files/'+propertyDetails.all_images[0]?.hash+'/'+propertyDetails.all_images[0]?.name"></share-buttons>
+                                                 <share-buttons 
+                                                  [url]="commonService.service_url+'getShareData/'+propertyDetails.prop_slug"
+                                                  [whatsApp]="false" 
+                                                  [google]="false"
+                                                  [pinterest]="false"
+                                                  [reddit]="false"
+                                                  [tumblr]="false"
+                                                  [stumbleUpOn]="false"
+                                                  [twitter]="false"
+                                                  [title]="propertyDetails.prop_title"
+                                                  [description]="propertyDetails.prop_desc_en"
+                                                  [image]="settingData?.site_url+'files/'+propertyDetails?.all_images[0]?.hash+'/'+propertyDetails?.all_images[0]?.name">
+                                                </share-buttons>-->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<hr/>    
+<!-- map portion -->
+<div class="container-fluid">
+<div class="row" *ngIf="propertyDetails">
+    <div class="col-md-12">
+        <agm-map 
+            [latitude]="+propertyDetails?.latitude"
+            [longitude]="+propertyDetails?.longitude"
+            [zoom]="zoom"
+            [disableDefaultUI]="false"
+            [zoomControl]="false">
+            <agm-marker 
+                [latitude]="+propertyDetails?.latitude"
+                [longitude]="+propertyDetails?.longitude"
+                [label]="propertyDetails?.label"
+                [markerDraggable]="true">
+                <agm-info-window>
+                    <strong class="text-primary">{{propertyDetails?.prop_title}}</strong><br>
+                    <span>{{propertyDetails?.prop_address}}</span>
+                </agm-info-window>
+            </agm-marker>
+            <!--<agm-circle [latitude]="+markers[0].latitude + 0.3" [longitude]="+markers[0].longitude" 
+                [radius]="5000"
+                [fillColor]="'red'"
+                [circleDraggable]="true"
+                [editable]="true">
+            </agm-circle> -->
+        </agm-map> 
+        
+    </div>
+</div>
+</div>
+<!-- map portion -->      
+<hr/>    
+<div class="clearfix" *ngIf="sameProperty">
+    <div class="container-fluid">
+        <div class="property-holder">
+            <div *ngIf="AllLanguage" class="all-page-heading gray">{{'PROPERTIES_ON_THE_MARKET_NEARBY' | translate:AllLanguage}}</div>
+            <ul class="propreties-listing">
+                <li *ngFor="let property of sameProperty; let i=index">
+                    <div class="property-box" *ngIf="i<3">
+                        <a style="cursor: pointer;" (click)="redirectTo(property?.prop_slug)">
+                            <div class="property-image">
+
+                                <div class="property-image-box">
+                                    <img [src]="" class="img-fluid" *ngIf="property?.cover_image_file.length==0">
+                                    <img [src]="settingData?.site_url+'files/'+property.cover_image_file[0]?.hash+'/'+property.cover_image_file[0]?.name" class="img-fluid" *ngIf="property.cover_image_file.length>0">
+                                </div>
+                                <div class="property-inner-content">
+                                    <div class="property-name">{{property?.prop_title}}</div>
+                                    <div class="property-address">
+                                        <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property?.prop_address}}
+                                    </div>
+                                    <hr class="line-style">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="property-area">{{property?.area}}</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="icon-box">
+                                                <span><img src="assets/images/bedroom2.png">{{property?.no_of_bedroom}}</span>
+                                                <span><img src="assets/images/bathroom2.png">{{property?.no_of_bath}}</span>
+                                                <span><img src="assets/images/garage-icon-yellow.png"> {{property?.no_of_garages}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="property-lower-part">
+                                <div class="row">
+                                    <div class="col-md-10 col-sm-10">
+                                        <div class="property-price" *ngIf="property?.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property?.price_Sell}}</div>
+                                        <div class="property-price" *ngIf="property?.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property?.price_rent}}</div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <a href="#" class="favourites">
+                                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+      
+</section>
+
+<ng-template #template *ngIf="AllLanguage">
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{'REPORT' | translate:AllLanguage}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="reportSubmit(reportForm)" #reportForm="ngForm">
+            <div class="form-group">
+                <textarea class="form-control" name="note"  [(ngModel)]="model.email" #note="ngModel" placeholder="{{'PROPERTY_NOTE_PLACEHOLDER' | translate:AllLanguage}}" required></textarea>
+                <div class="note" *ngIf="note.invalid && note.touched">
+                     <div *ngIf="note.hasError('required')" class="alert alert-danger">
+                        {{'NOTE_ERROR_MSG' | translate:AllLanguage}}
+                    </div>
+                </div>
+            </div>
+            <div class="text-center"><button type="submit" class="btn btn-yellow btn-bold" [disabled]="!reportForm.form.valid">{{'SUBMIT' | translate:AllLanguage}}</button></div>
+        </form>
+
+    </div>
+</ng-template>

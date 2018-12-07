@@ -1,0 +1,174 @@
+<section class="profile-area agent-details">
+	<div class="container-fluid">
+		<div class="spacer clearfix"></div>
+		<!--<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+			<li class="breadcrumb-item"><a routerLink="">Agent</a></li>
+			<li class="breadcrumb-item active">{{userDetails.u_name}}</li>
+		</ol>
+		<div class="spacer clearfix"></div>-->
+		<div class="user-top-area">
+			<div class="row">
+				<div class="col-md-3 col-lg-2">
+					<img *ngIf="!userDetails.name" src="assets/images/user-img.png" class="img-fluid rounded-circle">
+					<img *ngIf="userDetails?.name!== null" src="{{settingData.site_url+'files/'+userDetails?.hash+'/'+userDetails?.name}}" class="img-fluid rounded-circle">
+				</div>
+				<div class="col-md-9 col-lg-10">
+					<div class="float-right">
+				    <button type="button" class="btn btn-primary btn-sm" (click)="openModal(template)" *ngIf="loginData?.user_name!=userId && loginData">Rate me</button>
+					<ng-template #template>
+					  <div class="modal-header">
+						<h4 class="modal-title pull-left">Rate me</h4>
+						<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+					  </div>
+					  <div class="modal-body">
+						<div [hidden]="submitted">
+							<form (ngSubmit)="postReview(ratingForm)" #ratingForm="ngForm">
+
+									<input type="hidden" class="form-control" name="from_user_id"  [(ngModel)]="loginData.id" #from_user_id="ngModel">
+
+									<input type="hidden" class="form-control" name="to_user_id"  [(ngModel)]="userDetails.id" #to_user_id="ngModel">
+
+							  <div class="form-group">
+								<label for="name">Message</label>
+<textarea type="text" class="form-control" id="comment" required [(ngModel)]="model.message" name="comment" #comment="ngModel"></textarea>
+								<div [hidden]="comment.valid || comment.pristine" class="alert alert-danger">
+								  Message is required
+								</div>
+							  </div>
+							  <div class="form-group">
+								<label for="name">Rating</label>
+								<rating [(ngModel)]="rate" [max]="max" [readonly]="isReadonly" name="rate"></rating>
+								<div class="card">
+									<pre class="card-block card-header" style="margin:0;">Rate: <b>{{rate}}</b> </pre>
+								</div>
+							  </div>
+							  <button type="submit" class="btn btn-primary" [disabled]="!ratingForm.form.valid">Submit</button>
+							 <!-- - -->
+							</form>
+						  </div>
+					  </div>
+					</ng-template>
+
+					<a class="text-dark" href="javascript:void(0);" *ngIf="is_like_by_me==1" (click)="unlike()"><i class="fa fa-heart text-primary"></i> ({{userDetails.tot_likes}})</a>
+					<a class="text-dark" href="javascript:void(0);" *ngIf="is_like_by_me==0" (click)="like()"><i class="fa fa-heart-o text-primary"></i> ({{userDetails.tot_likes}})</a>
+					</div>
+					<h2 class="user-name">{{'PROFILE_NAME_PREFIX_TEXT' | translate:AllLanguage}} {{userDetails.u_name}}</h2>
+					<ul class="list-inline">
+						<li [innerHTML]="userDetails.about_me_en"></li>
+						<!--<li>License Number(s): #12345678</li>-->
+					</ul>
+					<div class="spacer-small clearfix"></div>
+					<ul class="user-social list-inline">
+						<li class="list-inline-item"><a href="{{userDetails.fb_url}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+						<li class="list-inline-item"><a href="{{userDetails.ln_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+					</ul>
+					<div class="spacer-medium clearfix"></div>
+					<h6>{{'SHARE' | translate:AllLanguage}}</h6>
+                                        <!-- 
+					<p class="social-icons text-left">
+                                            <a href="javascript:void(0);" style="color: #fff" class="facebook btn btn-default" ceiboShare [facebook]="{u:repoUrl}"><i class="fa fa-facebook"></i></a>
+                                            <a class="linkedin btn btn-default" style="color: #fff" href="javascript:void(0);" ceiboShare  [linkedIn]="{url:repoUrl}"><i class="fa fa-linkedin"></i></a>
+                                        </p>
+					-->
+					<!--<p><a href="#" class="text-primary"><i class="fa fa-share-square"></i></a> Share Profile</p>-->
+					<ul class="address-list list-inline">
+							<li *ngIf="userDetails.addres"><i class="fa fa-map-marker"></i>{{userDetails.address}}</li>
+							<li><i class="fa fa-envelope"></i> <a href="mailto:jhondeo@gmail.com">{{userDetails.email}}</a></li>
+							<li *ngIf="userDetails.mobile_number && userDetails.mobile_number!=0"><i class="fa fa-phone"></i> <a href="tel:+1 222 256 5522">{{userDetails.mobile_number}}</a></li>
+					</ul>
+					<hr>
+					<h3 class="all-title">{{'SERVICE_AREAS' | translate:AllLanguage}}</h3>
+					<div class="spacer-medium clearfix"></div>
+					<ul class="list-inline">
+						<li class="list-inline-item" [innerHtml]="userDetails.service_areas_en"></li>
+
+					</ul>
+					<hr>
+					<h3 class="all-title">{{'SPECIALTIES' | translate:AllLanguage}}</h3>
+					<div class="spacer-medium clearfix"></div>
+					<ul class="list-inline">
+						<li class="list-inline-item" [innerHtml]="userDetails.specialities_en"></li>
+					</ul>
+					<hr>
+					<h3 class="all-title">{{userDetails.u_name}} {{'PROPERTIES' | translate:AllLanguage}}</h3>
+					<div class="spacer-medium clearfix"></div>
+					<div class="property-place">
+						<div class="property-holder">
+							<ul class="propreties-listing">
+								<li *ngFor="let property of userProperties">
+									<div class="property-box">
+										<a [routerLink]="['/property-listing-details',property.prop_slug]">
+										<div class="property-image">
+											
+												<div class="property-image-box">
+												<img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+												<img [src]="settingData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0">
+												</div>
+												<div class="property-inner-content">
+													<div class="property-name">{{property.prop_title}}</div>
+													<div class="property-address">
+														<span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+													</div>
+													<hr class="line-style">
+													<div class="row">
+														<div class="col-6">
+															<div class="property-area">{{property.area}}</div>
+														</div>
+														<div class="col-6">
+															<div class="icon-box">
+																	<span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+																	<span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+																	<span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+																</div>
+														</div>
+													</div>
+												</div>
+											
+										</div>
+										</a>
+										<div class="property-lower-part">
+											<div class="row">
+												<div class="col-md-9 col-sm-9">
+													<div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+													<div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+												</div>
+												<div class="col-md-3 col-sm-3">
+														<a href="#" class="favourites">
+															<i class="fa fa-heart-o" aria-hidden="true"></i>
+														</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<hr>
+					<h3 class="all-title">Rating</h3>
+					<div class="spacer-medium clearfix"></div>
+					<ul class="rating-list">
+						<li *ngFor="let rating of ratings" class="rating-list list-inline">
+							<h5>{{rating.date}} <span class="float-right"><rating [(ngModel)]="rating.rate" [max]="max" [readonly]="isReadonlyUser"></rating></span></h5>
+							<p>{{rating.comment}}</p>
+							<div class="clearfix"></div>
+							<ul class="user-details list-inline">
+								<li class="list-inline-item">
+									<img *ngIf="!rating.name" src="assets/images/user-img.png" class="user">
+									<img *ngIf="rating.name" src="{{commonService.getImgSrc(rating)}}" class="user">
+								</li>
+								<li class="list-inline-item content-box">
+									<h5 class="title">{{rating.user_name}} </h5>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<div class="spacer clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+<section>

@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "http://inmopedia.com/backend/public/",
+    "secure": false,
+    "logLevel" : "debug",
+    "changeOrigin": true
+  }
+}

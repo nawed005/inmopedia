@@ -1,0 +1,133 @@
+<div *ngIf="commonService.loading" class="loader">
+      <div class="loading">
+	  </div>
+    </div>
+<!--Header Open-->
+<header class="header" *ngIf="AllLanguage && settingData">
+	<div class="container-fluid">
+		<nav class="navbar navbar-expand-md bg-light navbar-light">
+		  <a class="navbar-brand" routerLink="/"><img src="{{'siteHeaderLogo' | translate:settingData}}" class="logo"></a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+
+		  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<ul class="navbar-nav mr-auto">
+			  <li class="nav-item" routerLinkActive="active">
+                              <a style="cursor: pointer;" class="nav-link" (click)="onNavigate('Sell')">{{'BUY' | translate:AllLanguage}}</a>
+			  </li>
+			  <li class="nav-item" routerLinkActive="active">
+				<a style="cursor: pointer;" class="nav-link" (click)="onNavigate('Rent')">{{'RENT' | translate:AllLanguage}}</a>
+			  </li>
+			  <li class="nav-item" routerLinkActive="active">
+				<a class="nav-link" routerLink="/post-property" *ngIf="commonService.UserData?.type!='Buyer'">{{'SELL' | translate:AllLanguage}}</a>
+			  </li>			  
+			</ul>
+			
+			<ul class="navbar-nav my-2 my-lg-0">
+			  
+			  <li class="nav-item" routerLinkActive="active" *ngIf="!commonService.userLoggedIn">
+				<a class="nav-link" routerLink="/sign-in">{{'SIGNIN' | translate:AllLanguage}}</a>
+			  </li>
+			  <li class="nav-item" routerLinkActive="active" *ngIf="commonService.userLoggedIn">
+				<a class="nav-link" routerLink="/profile">{{commonService.UserData?.first_name}}</a>
+			  </li>
+              <li class="nav-item" routerLinkActive="active" *ngIf="commonService.UserData?.type!='Buyer'">
+				<a class="nav-link nav-link-border" routerLink="/post-property">{{'POST_PROPERTY' | translate:AllLanguage}}<span>{{'FREE' | translate:AllLanguage}}</span></a>
+			  </li>
+			</ul>
+		  </div>  
+		</nav>
+		<a class="nav-icon" (click)="slidebarnav = true"><img src="assets/images/nav-icon.png"></a>
+		<button class="btn btn-link btn-language" (click)="switchLanguage('sp')" *ngIf="lang=='en'"><img src="assets/images/english.png"></button>
+                <button class="btn btn-link btn-language" (click)="switchLanguage('en')" *ngIf="lang=='sp'"><img src="assets/images/spain.png"></button>
+		<nav class="sidebar-nav ng-scope" *ngIf="slidebarnav == true">
+			<a class="btn-nav-closed" (click)="slidebarnav = false"></a>
+			<ul class="list-inline">
+				<li><a routerLink="/home" (click)="slidebarnav = false">{{'HOME' | translate:AllLanguage}}</a></li>
+				<!--<li><a routerLink="/how-it-works" (click)="slidebarnav = false">{{'HOW_IT_WORKS' | translate:AllLanguage}}</a></li> -->
+                                <li *ngIf="!commonService.userLoggedIn"><a routerLink="/tutorials" (click)="slidebarnav = false">{{'HOW_IT_WORKS' | translate:AllLanguage}}</a></li>
+                                <li *ngIf="commonService.userLoggedIn"><a [routerLink]="['/tutorial-list',commonService.UserData?.type]" (click)="slidebarnav = false">{{'HOW_IT_WORKS' | translate:AllLanguage}}</a></li>
+                                <li><a routerLink="/sell" (click)="slidebarnav = false">{{'SELLING' | translate:AllLanguage}}</a></li>
+				<li><a routerLink="/buy" (click)="slidebarnav = false">{{'BUYING' | translate:AllLanguage}}</a></li>
+				<li><a routerLink="/legal" (click)="slidebarnav = false">{{'LEGAL' | translate:AllLanguage}}</a></li>
+				<li><a routerLink="/blog" (click)="slidebarnav = false">{{'BLOG' | translate:AllLanguage}}</a></li>
+				<li><a routerLink="/price-your-home" (click)="slidebarnav = false">{{'PRICE_YOUR_HOME' | translate:AllLanguage}}</a></li>
+				<li class="mobile-view"><a routerLink="/sign-in" (click)="slidebarnav = false">{{'SIGNIN' | translate:AllLanguage}}</a></li>
+				
+			</ul>
+		</nav>
+	</div>
+	<!--<div class="add-area"><img src="assets/images/google-ads.png" class="img-fluid"><ng-adsense></ng-adsense></div>-->
+</header>
+<!--Header Closed-->
+<alert style='text-align: center;'></alert>
+
+<router-outlet (activate)="onActivate($event, outlet)" #outlet></router-outlet>
+
+<!--Footer Open-->
+<div class="spacer-medium clearfix"></div>
+<div class="add-area"><img src="assets/images/google-ads.png" class="img-fluid"><!--<ng-adsense></ng-adsense>--></div>
+<div class="spacer-medium clearfix"></div>
+<footer class="footer" *ngIf="AllLanguage && settingData" [ngStyle]="{'background' : footerBackground()}">
+	<div class="container-fluid">
+		<div class="footer-top">
+			<div class="row">
+				<div class="col-md-4">
+					<a routerLink="/"><img src="{{'siteFooterLogo' | translate:settingData}}" class="img-fluid footer-logo"></a>
+					<div class="spacer-medium clearfix"></div>
+					<a routerLink="/post-property" class="nav-link-border">{{'POST_PROPERTY' | translate:AllLanguage}}<span>{{'FREE' | translate:AllLanguage}}</span></a>
+				</div>
+				<div class="col-md-4">
+					<div class="footer-heading">{{'SITE_MAP' | translate:AllLanguage}}</div>
+					<ul class="footer-menu">
+						<li><a routerLink="/">{{'HOME' | translate:AllLanguage}}</a></li>
+						<!--<li><a routerLink="/tutorial">{{'HOW_IT_WORKS' | translate:AllLanguage}}</a></li> -->
+                                                <li *ngIf="!commonService.userLoggedIn"><a routerLink="/tutorials" (click)="slidebarnav = false">{{'HOW_IT_WORKS' | translate:AllLanguage}}</a></li>
+                                                <li *ngIf="commonService.userLoggedIn"><a [routerLink]="['/tutorial-list',commonService.UserData?.type]" (click)="slidebarnav = false">{{'HOW_IT_WORKS' | translate:AllLanguage}}</a></li>
+                                                <li><a routerLink="/privacy-policy" (click)="slidebarnav = false">{{'PRIVACY_POLICY' | translate:AllLanguage}}</a></li>
+						<li><a routerLink="/sell">{{'SELLING' | translate:AllLanguage}}</a></li>
+						<li><a routerLink="/buy">{{'BUYING' | translate:AllLanguage}}</a></li>
+						<li><a routerLink="/legal">{{'LEGAL' | translate:AllLanguage}}</a></li>
+						<li><a routerLink="/blog">{{'BLOG' | translate:AllLanguage}}</a></li>
+						<li><a routerLink="/price-your-home">{{'PRICE_YOUR_HOME' | translate:AllLanguage}}</a></li>
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<div class="footer-heading">{{'NEWSLETTER' | translate:AllLanguage}}</div>
+					<div [hidden]="submitted">
+						<form (ngSubmit)="onSubmit()" #newsletterForm="ngForm">
+						  <div class="form-group form-part">
+							<input type="email" class="form-control" email name="emailField"  [(ngModel)]="email" #emailField="ngModel" placeholder="{{'NEWSLETTER_EMAIL_PLACEHOLDER' | translate:AllLanguage}}">
+							<button type="submit" class="btn btn-yellow" [disabled]="!newsletterForm.form.valid"><i class="fa fa-paper-plane"></i></button>
+							<div  class="emailinvalid" *ngIf="emailField.invalid && emailField.touched">
+							  <div  *ngIf="emailField.hasError('email')" class="alert alert-danger">
+								Please enter the correct email, this email not valid.
+							  </div>
+							</div>
+						  </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer-bott">
+			<div class="row" *ngIf="settingData">
+				<div class="col-md-6 col-sm-6">
+					<div class="copyright">{{'copyrightText' | translate:settingData}}</div>
+				</div>
+				<div class="col-md-6 col-sm-6">
+					<ul class="social-list">
+						<li><a href="{{settingData.fb_url}}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+						<li><a href="{{settingData.tw_url}}"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+						<li><a href="{{settingData.ins_url}}"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+						<li><a href="{{settingData.ln_url}}"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+						<li><a href="{{settingData.you_url}}"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+<!--Footer Closed-->
+

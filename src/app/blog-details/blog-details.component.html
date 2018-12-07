@@ -1,0 +1,56 @@
+<section class="blog-details">
+	<div class="spacer clearfix"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-8" *ngIf="blog">
+				<h3 class="all-title">{{'blogTitle' | translate:blog}}</h3>
+				<div class="spacer-medium clearfix"></div>
+				<div class="row">
+					<div class="col-md-6">
+						<span class="date text-primary">{{blog.blog_date}} | {{blog.u_name}}</span>
+					</div>
+					<!--<div class="col-md-6">
+						<ul class="social-share list-inline text-right">
+							<li class="list-inline-item">{{'SHARE' | translate:AllLanguage}} </li>
+							<li class="list-inline-item"><a href="#"><i class="fa fa-facebook-square"></i></a></li>
+							<li class="list-inline-item"><a href="#"><i class="fa fa-twitter-square"></i></a></li>
+							<li class="list-inline-item"><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
+							<li class="list-inline-item"><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+						</ul>
+					</div>-->
+				</div>
+				<div class="spacer-medium clearfix"></div>
+				<img [src]="settingData.site_url+'files/'+blog.hash+'/'+blog.name" class="img-fluid">
+				<div class="spacer-medium clearfix"></div>
+				<p innerHtml="{{'blogDesc' | translate:blog}}"></p>
+			</div>
+			<div class="col-lg-4">
+				<div class="related-post">
+					<h3>{{'RELATED_POST' | translate:AllLanguage}}</h3>
+					<div class="spacer-medium clearfix"></div>
+					<ul class="blog-list text-center">
+						<li *ngFor="let blog of sameCat | slice:0:6; let i=index">
+							<div class="image-box">
+								<a routerLink="/details/{{blog.blog_slug}}">
+									<img class="img-fluid" src="{{settingData.site_url+'files/'+blog.hash+'/'+blog.name}}">
+								</a>
+							</div>
+							<h6 class="date text-primary">{{blog.blog_date}} | {{blog.u_name}}</h6>
+							<h5 class="title"><a routerLink="/details/{{blog.blog_slug}}">{{'blogTitle' | translate:blog}}</a></h5>
+							<a class="btn-more text-primary" routerLink="/details/{{blog.blog_slug}}">{{'KNOW_MORE' | translate:AllLanguage}}</a>
+							<!--<ul class="blog-social list-inline">
+								<li class="list-inline-item"><a href="#"><i class="fa fa-facebook-square"></i></a></li>
+								<li class="list-inline-item"><a href="#"><i class="fa fa-twitter-square"></i></a></li>
+								<li class="list-inline-item"><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
+								<li class="list-inline-item"><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+							</ul>-->
+						</li>
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<div class="spacer clearfix"></div>
+<section>

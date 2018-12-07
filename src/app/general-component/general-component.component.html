@@ -1,0 +1,42 @@
+<section class="profile-area properties-page-area" *ngIf="AllLanguage && leads">
+         <div class="container-fluid">
+        <div class="spacer-small clearfix"></div>
+        <div class="spacer-small clearfix"></div>
+        <table class="properties-table table">
+            <thead class="table thead-primary table-striped">
+                <tr>
+                    <th>{{'PROP_TITLE'| translate:AllLanguage}}</th>
+                    <th>{{'EMAIL'| translate:AllLanguage}}</th>
+                    <th>{{'NAME'| translate:AllLanguage}}</th>
+                    <th>{{'PHONE'| translate:AllLanguage}}</th>
+                    <th>{{'DATE'| translate:AllLanguage}}</th>
+                    <th>{{'MESSAGE'| translate:AllLanguage}}</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lead of leads ; let i = index">
+                    <td><a [routerLink]="['/property-listing-details',lead?.prop_slug]">{{lead?.prop_title}}</a></td>
+                    <td>{{lead?.email}}</td>
+                    <td>{{lead?.name}}</td>
+                    <td>{{lead?.phone}}</td>
+                    <td>{{lead?.date}}</td>
+                    <td>
+                        <div>
+                            <p class="small" *ngIf="!messageToggle[i]">{{ lead?.message| limitTo: 50 }}</p>
+                            <p class="big" *ngIf="messageToggle[i]">
+                                {{ lead.message }}
+                            </p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" (click)="messageToggle[i] = !messageToggle[i]">{{messageToggle[i] ? 'LESS': 'SHOW'}}</button>
+                    </td>
+                </tr>
+                <tr *ngIf="leads.length==0">{{'NO_RECORD_FOUND'| translate:AllLanguage}}</tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="spacer clearfix"></div>
+</section>
+<style>
+
+</style>

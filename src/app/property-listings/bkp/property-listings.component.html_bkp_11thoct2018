@@ -1,0 +1,303 @@
+<section class="property-listings-area">
+    <div class="container-fluid-fluid">
+        <div class="tab-section property-listings-search">
+            <tabset>
+                <tab heading="{{'BUY' | translate:AllLanguage}}" id="tab1">
+                    <div [hidden]="submitted" class="form-wrapper">
+                        <form (ngSubmit)="onSubmit()" #propertyForm="ngForm" >
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <!--<input type="text" class="form-control input-style" id="name" required [(ngModel)]="model.name" name="name" #name="ngModel" placeholder="Enter Location, Project or Landmark">
+                                        <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                                        Enter Location, Project or Landmark is required
+                                        </div>-->
+                                        <div class="location-field-area">
+                                            <!--<mat-form-field>
+                                                    <input type="text" matInput placeholder="Enter Location, Project or Landmark" formControlName="stateGroup" required [matAutocomplete]="autoGroup">
+                                                      <mat-autocomplete #autoGroup="matAutocomplete">
+                                                            <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.letter">
+                                                              <mat-option *ngFor="let name of group.names" [value]="name">
+                                                                    {{name}}
+                                                              </mat-option>
+                                                      </mat-optgroup>
+                                                    </mat-autocomplete>
+                                              </mat-form-field>-->
+
+                                            <!--<select class="form-control" id="property_type" [(ngModel)]="search.autoField" name="property_type" (change)="changeAutoField($event)">
+                                                     <option value="">-Select Prperty Type-</option>
+                                                     <optgroup *ngFor="let autof of autoGroups" label="{{autof.letter}}">
+            
+                                                    <option *ngFor="let val of autof.names" [value]="val.slug">{{val.label}}</option>
+                                                    </optgroup>
+                                          </select>-->
+                                            <ng-autocomplete (selected)="changeAutoField($event)" [classes]="['']" [group]="autoGroups"></ng-autocomplete>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <!--<select class="form-control select-style" id="property_type" required [(ngModel)]="model.property_type" name="property_type" #property_type="ngModel">
+                                          <option *ngFor="let property_type of property_types" [value]="property_type">{{property_type}}</option>
+                                        </select>
+                                        <div [hidden]="property_type.valid || property_type.pristine" class="alert alert-danger">
+                                          Property Type is required
+                                        </div>-->
+                                        <button type="button" class="btn btn-light btn-toggle" (click)="propertyShow = !propertyShow" (click)="minMaxPrice = false">{{'PROPERTY_TYPE' | translate:AllLanguage}}</button>
+                                        <div *ngIf="propertyShow" (click)="propertyShow =  false" class="overlay-area"></div>
+                                        <div *ngIf="propertyShow" class="property-group text-left">
+                                            <div *ngFor="let property_type of propertyTypes">
+                                                <h5 class="title text-left">{{property_type.type_name_en}}</h5>
+                                                <ul class="item-list list-unstyled">
+                                                    <li *ngFor="let property of property_type.prop">
+                                                        <div class="form-check">
+                                                            <div class="form-checkbox">
+                                                                <input class="form-check-input" type="checkbox" id="elemnt{{property.id}}" name="{{property.prop_type_slug}}" ng-model="elemnt.checked" (change)="updateSelectedCharacters($event)" [attr.checked]="search.propertyType.indexOf(property.prop_type_slug) > -1 ? '' : null">
+                                                                <label class="form-check-label" for="elemnt{{property.id}}">
+                                                                    {{property.type_name_en}}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <!--<select class="form-control select-style" id="budget" required [(ngModel)]="model.budget" name="budget" #budget="ngModel">
+                                          <option *ngFor="let budget of budgets" [value]="budget">{{budget}}</option>
+                                        </select>
+                                        <div [hidden]="budget.valid || budget.pristine" class="alert alert-danger">
+                                          Budget is required
+                                        </div>-->
+                                        <button type="button" class="btn btn-light btn-toggle" (click)="minMaxPrice = !minMaxPrice" (click)="propertyShow = false">{{'BUDGET'| translate:AllLanguage}}</button>
+                                        <div *ngIf="minMaxPrice" (click)="minMaxPrice =  false" class="overlay-area"></div>
+                                        <div *ngIf="minMaxPrice" class="min-max-price text-left">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Min Price" (selectionChange)="changeMinPrice($event)" [(ngModel)]="search.minPrice" name="mip">
+                                                            <mat-option *ngFor="let minPrice of minPrices" [value]="minPrice.value">
+                                                                {{minPrice.viewValue}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <mat-form-field>
+                                                    <mat-select placeholder="Max Price" (selectionChange)="changeMaxPrice($event)" [(ngModel)]="search.maxPrice" name="map">
+                                                        <mat-option *ngFor="let maxPrice of maxPrices" [value]="maxPrice.value">
+                                                            {{maxPrice.viewValue}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn button-style" [disabled]="!propertyForm.form.valid">{{'SEARCH'| translate:AllLanguage}}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </tab>
+        <tab heading="{{'RENT'| translate:AllLanguage}}">
+            <div [hidden]="submitted" class="form-wrapper">
+                <form (ngSubmit)="onSubmit1()" #propertyForm1="ngForm" [formGroup]="contact_form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <!--
+                                <input type="text" class="form-control input-style" id="name" required [(ngModel)]="model.name" name="name" #name="ngModel" placeholder="Enter Location, Project or Landmark">
+                                <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                                Enter Location, Project or Landmark is required
+                                </div>-->
+                                <div class="location-field-area">
+                                    <!--<select class="form-control" id="property_type" [(ngModel)]="search.autoField" name="property_type" (change)="changeAutoField($event)">
+                                               <option value="">-Select Prperty Type-</option>
+                                               <optgroup *ngFor="let autof of autoGroups" label="{{autof.letter}}">
+      
+                                              <option *ngFor="let val of autof.names" [value]="val.slug">{{val.label}}</option>
+                                              </optgroup>
+                                    </select>-->
+                                    <ng-autocomplete (selected)="changeAutoField($event)" [classes]="['']" [group]="autoGroups"></ng-autocomplete>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <!--
+                                <select class="form-control select-style" id="property_type" required [(ngModel)]="model.property_type" name="property_type" #property_type="ngModel">
+                                  <option *ngFor="let property_type of property_types" [value]="property_type">{{property_type}}</option>
+                                </select>
+                                <div [hidden]="property_type.valid || property_type.pristine" class="alert alert-danger">
+                                  Property Type is required
+                                </div>-->
+                                <button type="button" class="btn btn-light btn-toggle" (click)="propertyShow = !propertyShow" (click)="minMaxPrice = false">Property Type</button>
+                                <div *ngIf="propertyShow" class="property-group text-left">
+                                    <div *ngFor="let property_type of propertyTypes">
+                                        <h5 class="title text-left">{{property_type.type_name_en}}</h5>
+                                        <ul class="item-list list-unstyled">
+                                            <li *ngFor="let property of property_type.prop">
+                                                <div class="form-check">
+                                                    <div class="form-checkbox">
+                                                        <input class="form-check-input" type="checkbox" id="elemnt{{property.id}}" name="{{property.prop_type_slug}}" ng-model="elemnt.checked" (change)="updateSelectedCharacters($event)" [attr.checked]="search.propertyType.indexOf(property.prop_type_slug) > -1 ? '' : null">
+                                                        <label class="form-check-label" for="elemnt{{property.id}}">
+                                                            {{property.type_name_en}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <!--
+                                <select class="form-control select-style" id="budget" required [(ngModel)]="model.budget" name="budget" #budget="ngModel">
+                                  <option *ngFor="let budget of budgets" [value]="budget">{{budget}}</option>
+                                </select>
+                                <div [hidden]="budget.valid || budget.pristine" class="alert alert-danger">
+                                  Budget is required
+                                </div>-->
+                                <button type="button" class="btn btn-light btn-toggle" (click)="minMaxPrice = !minMaxPrice" (click)="propertyShow = false">Budget</button>
+                                <div *ngIf="minMaxPrice" class="min-max-price text-left">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <mat-select placeholder="Min Price" (selectionChange)="changeMinPrice($event)" [(ngModel)]="search.minPrice" name="mip">
+                                                    <mat-option *ngFor="let minPrice of minPrices" [value]="minPrice.value">
+                                                        {{minPrice.viewValue}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Max Price" (selectionChange)="changeMaxPrice($event)" [(ngModel)]="search.maxPrice" name="map">
+                                                <mat-option *ngFor="let maxPrice of maxPrices" [value]="maxPrice.value">
+                                                    {{maxPrice.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn button-style" [disabled]="!propertyForm1.form.valid">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</tab>
+</tabset>
+<!--<div class="extra-link">
+    <ul>
+        <li><a routerLink="/post-property">{{'SELL'| translate:AllLanguage}}</a></li>
+        <li><a routerLink="/post-property">{{'POST_A_FREE_AD'| translate:AllLanguage}}</a></li>
+    </ul>
+</div> -->
+</div>
+<div class="property-list-grid">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="property-holder">
+                <ul class="propreties-listing" *ngIf="properties.length>0">
+                    <li *ngFor="let property of properties">
+                        <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+                                        <img [src]="settingsData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-9 col-sm-9">
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+
+                </ul>
+                <span *ngIf="properties.length==0">
+                    {{'NO_RECORD_FOUND'| translate:AllLanguage}}
+                </span>
+            </div>
+        </div>
+        <!--[iconUrl]="'http://honestweb.website/dev18/inmopedia/frontend/src/assets/images/map-icon.png'"-->
+        <div class="col-lg-6">
+            <div class="map-area">
+                <agm-map 
+                    [latitude]="+markers[0].latitude"
+                    [longitude]="+markers[0].longitude"
+                    [zoom]="zoom"
+                    [disableDefaultUI]="false"
+                    [zoomControl]="false"
+                    (mapClick)="mapClicked($event)">
+                    <agm-marker 
+                        *ngFor="let m of markers; let i = index"
+                        (markerClick)="clickedMarker(m.label, i)"
+                        [latitude]="+m.latitude"
+                        [longitude]="+m.longitude"
+                        [label]="m.label"
+                        [markerDraggable]="true"
+                        (dragEnd)="markerDragEnd(m, $event)">
+                        <agm-info-window>
+                            <strong class="text-primary">{{m.prop_title}}</strong><br>
+                            <span>{{m.prop_address}}</span>
+                        </agm-info-window>
+                    </agm-marker>
+                    <!--<agm-circle [latitude]="+markers[0].latitude + 0.3" [longitude]="+markers[0].longitude" 
+                        [radius]="5000"
+                        [fillColor]="'red'"
+                        [circleDraggable]="true"
+                        [editable]="true">
+                    </agm-circle> -->
+                </agm-map>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</section>

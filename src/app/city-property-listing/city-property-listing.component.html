@@ -1,0 +1,95 @@
+<section class="property-listings-area">
+<div class="container-fluid-fluid">
+<div class="property-list-grid">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="property-holder">
+                <ul class="propreties-listing" *ngIf="properties">
+                    <li *ngFor="let property of properties">
+                        <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property?.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property?.cover_image_file.length==0">
+                                        <img [src]="settingsData?.site_url+'files/'+property?.cover_image_file[0].hash+'/'+property?.cover_image_file[0].name" class="img-fluid" *ngIf="property?.cover_image_file.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property?.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property?.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property?.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property?.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property?.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property?.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-9 col-sm-9">
+                                            <div class="property-price" *ngIf="property?.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property?.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property?.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property?.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+
+                </ul>
+                <span *ngIf="properties?.length==0">
+                    {{'NO_RECORD_FOUND'| translate:AllLanguage}}
+                </span>
+            </div>
+        </div>
+        <!--[iconUrl]="'http://honestweb.website/dev18/inmopedia/frontend/src/assets/images/map-icon.png'"-->
+        <div class="col-lg-6" *ngIf="markers">
+            <div class="map-area">
+                <agm-map 
+                    [latitude]="+markers[0].latitude"
+                    [longitude]="+markers[0].longitude"
+                    [zoom]="zoom"
+                    [disableDefaultUI]="false"
+                    [zoomControl]="false"
+                    (mapClick)="mapClicked($event)">
+                    <agm-marker 
+                        *ngFor="let m of markers; let i = index"
+                        (markerClick)="clickedMarker(m.label, i)"
+                        [latitude]="+m.latitude"
+                        [longitude]="+m.longitude"
+                        [label]="m.label"
+                        [markerDraggable]="true"
+                        (dragEnd)="markerDragEnd(m, $event)">
+                        <agm-info-window>
+                            <strong class="text-primary">{{m.prop_title}}</strong><br>
+                            <span>{{m.prop_address}}</span>
+                        </agm-info-window>
+                    </agm-marker>
+                    <!--<agm-circle [latitude]="+markers[0].latitude + 0.3" [longitude]="+markers[0].longitude" 
+                        [radius]="5000"
+                        [fillColor]="'red'"
+                        [circleDraggable]="true"
+                        [editable]="true">
+                    </agm-circle> -->
+                </agm-map>
+            </div>
+        </div>
+    </div>
+</div> 
+</div> 
+</section>

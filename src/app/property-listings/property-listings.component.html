@@ -1,0 +1,179 @@
+<section class="property-listings-area" *ngIf="AllLanguage">
+    <div class="container-fluid-fluid">
+        <div class="tab-section property-listings-search">
+
+<div class="tabs-area">
+<ul class="nav nav-tabs">
+    <li class="nav-item" [ngClass]="{'active': tabs == 'Sell'}"><a class="nav-link" (click)="toggleTabs('Sell')" style="cursor:pointer">{{'BUY' | translate:AllLanguage}}</a></li>
+    <li class="nav-item" [ngClass]="{'active': tabs == 'Rent'}"><a class="nav-link" (click)="toggleTabs('Rent')" style="cursor:pointer">{{'RENT' | translate:AllLanguage}}</a></li>
+</ul>
+<div class="tab-content">
+<div [hidden]="submitted" class="form-wrapper">
+    <form (ngSubmit)="onSubmit()" #propertyForm="ngForm" >
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="location-field-area">
+                        <!--<label>Current Search : {{ search.autoField }}</label>-->
+                        <input type="text" class="form-control input-style" name="search_autoField" placeholder="Enter Location, Project or Landmark" [(ngModel)]="search.autoField">
+                        <!--<ng-autocomplete (selected)="changeAutoField($event)" [classes]="['']" [group]="autoGroups" (keyup)="onKey($event)"></ng-autocomplete>  -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <button type="button" class="btn btn-light btn-toggle" (click)="propertyShow1=!propertyShow1" >{{'PROPERTY_TYPE' | translate:AllLanguage}}</button>
+
+                    <div [hidden]="propertyShow1" (click)="propertyShow1=false" class="overlay-area"></div> 
+                    <div [hidden]="propertyShow1" class="property-group text-left">
+                        
+                        <div *ngFor="let property_type of propertyTypes">
+                            <h5 class="title text-left">{{property_type.type_name_en}}</h5>
+                            <ul class="item-list list-unstyled">
+                                <li *ngFor="let property of property_type.prop; let i=index">
+                                    <div class="form-check">
+                                        <div class="form-checkbox">
+                                            <input class="form-check-input" type="checkbox" id="sell_{{property.id}}" name="{{property.id}}" [checked]="lookForSelected(property.id)" (change)="updateSelectedCharacters($event)">
+                                            <label class="form-check-label" for="sell_{{property.id}}">
+                                                {{property.type_name_en}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <button type="button" class="btn btn-light btn-toggle" (click)="minMaxPrice=!minMaxPrice;propertyShow1=true">{{'BUDGET'| translate:AllLanguage}}</button>
+                    <div *ngIf="minMaxPrice" (click)="minMaxPrice=false" class="overlay-area"></div>
+                    <div *ngIf="minMaxPrice" class="min-max-price text-left">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field>
+                                    <mat-select placeholder="Min Price" (selectionChange)="changeMinPrice($event)" [(ngModel)]="search.minPrice" name="mip">
+                                        <mat-option *ngFor="let minPrice of minPrices" [value]="minPrice.value">
+                                            {{minPrice.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <mat-select placeholder="Max Price" (selectionChange)="changeMaxPrice($event)" [(ngModel)]="search.maxPrice" name="map">
+                                    <mat-option *ngFor="let maxPrice of maxPrices" [value]="maxPrice.value">
+                                        {{maxPrice.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn button-style" [disabled]="!propertyForm.form.valid">{{'SEARCH'| translate:AllLanguage}}</button>
+    </div>
+</div>
+</form>
+</div>
+</div>
+
+</div>
+</div>
+<div class="property-list-grid" *ngIf="properties">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="property-holder">
+                <ul class="propreties-listing" *ngIf="properties.length>0">
+                    <li *ngFor="let property of properties">
+                        <div class="property-box">
+                            <a [routerLink]="['/property-listing-details',property?.prop_slug]">
+                                <div class="property-image">
+
+                                    <div class="property-image-box">
+                                        <img [src]="" class="img-fluid" *ngIf="property?.cover_image_file.length==0">
+                                        <img [src]="settingsData?.site_url+'files/'+property?.cover_image_file[0].hash+'/'+property?.cover_image_file[0].name" class="img-fluid" *ngIf="property?.cover_image_file.length>0"></div>
+                                    <div class="property-inner-content">
+                                        <div class="property-name">{{property?.prop_title}}</div>
+                                        <div class="property-address">
+                                            <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property?.prop_address}}
+                                        </div>
+                                        <hr class="line-style">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="property-area">{{property?.area}}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="icon-box">
+                                                    <span><img src="assets/images/bedroom2.png">{{property?.no_of_bedroom}}</span>
+                                                    <span><img src="assets/images/bathroom2.png">{{property?.no_of_bath}}</span>
+                                                    <span><img src="assets/images/garage-icon-yellow.png">{{property?.no_of_garages}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="property-lower-part">
+                                    <div class="row">
+                                        <div class="col-md-9 col-sm-9">
+                                            <div class="property-price" *ngIf="property?.sell_or_rent=='Sell'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property?.price_Sell}}</div>
+                                            <div class="property-price" *ngIf="property?.sell_or_rent=='Rent'"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property?.price_rent}}</div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3">
+                                            <a href="#" class="favourites">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+
+                </ul>
+                <span *ngIf="properties.length==0">
+                    {{'NO_RECORD_FOUND'| translate:AllLanguage}}
+                </span>
+            </div>
+        </div>
+        <!--[iconUrl]="'http://honestweb.website/dev18/inmopedia/frontend/src/assets/images/map-icon.png'"-->
+        <div class="col-lg-6" *ngIf="markers">
+            <div class="map-area" *ngIf="markers.length>0">
+                <agm-map 
+                    [latitude]="+markers[0].latitude"
+                    [longitude]="+markers[0].longitude"
+                    [zoom]="zoom"
+                    [disableDefaultUI]="false"
+                    [zoomControl]="false"
+                    (mapClick)="mapClicked($event)">
+                    <agm-marker 
+                        *ngFor="let m of markers; let i = index"
+                        (markerClick)="clickedMarker(m.label, i)"
+                        [latitude]="+m.latitude"
+                        [longitude]="+m.longitude"
+                        [label]="m.label"
+                        [markerDraggable]="true"
+                        (dragEnd)="markerDragEnd(m, $event)">
+                        <agm-info-window>
+                            <strong class="text-primary">{{m.prop_title}}</strong><br>
+                            <span>{{m.prop_address}}</span>
+                        </agm-info-window>
+                    </agm-marker>
+                    <!--<agm-circle [latitude]="+markers[0].latitude + 0.3" [longitude]="+markers[0].longitude" 
+                        [radius]="5000"
+                        [fillColor]="'red'"
+                        [circleDraggable]="true"
+                        [editable]="true">
+                    </agm-circle> -->
+                </agm-map>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</section>

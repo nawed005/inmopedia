@@ -1,0 +1,186 @@
+<div class="spacer clearfix"></div>
+<section class="login-area" *ngIf="AllLanguage">
+    <div class="container-fluid">
+        <h2 class="text-center all-title" [innerHTML]="'PLEASE_SIGNIN_OR_REGISTER' | translate:AllLanguage" ></h2>
+        <div class="spacer clearfix"></div>
+        <div class="login-inner-box">
+            <div class="ui inverted dimmer" [ngClass]="activeClass" id="workerBrowseLoader"><div class="ui loader"></div></div>
+            <tabset #staticTabs>
+                <tab [heading]="'SIGNIN' | translate:AllLanguage">
+                    <div [hidden]="submitted">
+                        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                            <div class="form-group">
+                                <input type="email" class="form-control" email name="emailField"  [(ngModel)]="model.email" #emailField="ngModel" [placeholder]="'EMAIL_PLACEHOLDER' | translate:AllLanguage">
+                                       <div *ngIf="is_log_err">
+                                    <div class="alert alert-danger alert-icon">
+                                        <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                        {{login_err_msg}}
+                                    </div>
+                                </div>
+                                <div class="emailinvalid" *ngIf="emailField.invalid && emailField.touched">
+                                     <div  *ngIf="emailField.hasError('email')" class="alert alert-danger alert-icon">
+                                        <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                        {{'EMAIL_ERROR_MSG' | translate:AllLanguage}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="passwordField"
+                                       required
+                                       [(ngModel)]="model.password" name="passwordField"
+                                       #passwordField="ngModel" placeholder="{{'PASSWORD_PLACEHOLDER' | translate:AllLanguage}}">
+                                       <div [hidden]="passwordField.valid || passwordField.pristine"
+                                       class="alert alert-danger alert-icon">
+                                       <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                    {{'PASSWORD_ERROR_MSG' | translate:AllLanguage}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--<div class="checkbox">
+                                            <label class="center-block">
+                                              <input type="checkbox"> Remember me
+                                            </label>
+                                    </div>-->
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <a routerLink="/forgot-password">{{'FOGOT_YOUR_PASSWORD' | translate:AllLanguage}}</a>
+                                </div>
+                            </div>
+                            <div class="spacer-medium clearfix"></div>
+                            <div class="text-center"><button type="submit" class="btn btn-yellow btn-bold" [disabled]="!loginForm.form.valid">{{'SIGNIN_BUTTON' | translate:AllLanguage}}</button></div>
+                        </form>
+                    </div>
+                </tab>
+                <tab heading="{{'REGISTER' | translate:AllLanguage}}">
+                    <div [hidden]="submitted2">
+
+                        <form (ngSubmit)="onSubmit2(registerForm)" #registerForm="ngForm">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="first_name"  [(ngModel)]="model2.first_name" #first_name="ngModel" placeholder="{{'NAME_PLACEHOLDER' | translate:AllLanguage}}" required [readonly]="isReadOnly">
+                                       <div  class="emailinvalid2" *ngIf="first_name.invalid && first_name.touched">
+                                       <div  *ngIf="first_name.hasError('required')" class="alert alert-danger alert-icon">
+                                        <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                        {{'NAME_ERROR_MSG' | translate:AllLanguage}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="last_name"  [(ngModel)]="model2.last_name" #last_name="ngModel" placeholder="{{'NAME_PLACEHOLDER' | translate:AllLanguage}}" required [readonly]="isReadOnly">
+                                       <div  class="emailinvalid2" *ngIf="last_name.invalid && last_name.touched">
+                                       <div  *ngIf="last_name.hasError('required')" class="alert alert-danger alert-icon">
+                                        <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                        {{'NAME_ERROR_MSG' | translate:AllLanguage}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control" email name="emailField2"  [(ngModel)]="model2.email2" #emailField2="ngModel" placeholder="{{'EMAIL_PLACEHOLDER' | translate:AllLanguage}}" required [readonly]="isReadOnly">
+                                       <div *ngIf="is_email_exist">
+                                    {{'EMAIL_ALREADY_EXIST_MSG' | translate:AllLanguage}}
+                                </div>
+                                <div  class="emailinvalid2" *ngIf="emailField2.invalid && emailField2.touched">
+                                      <div  *ngIf="emailField2.hasError('email')" class="alert alert-danger alert-icon">
+                                        <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                        {{'EMAIL_ERROR_MSG' | translate:AllLanguage}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <input type="password" class="form-control" id="password2" required [(ngModel)]="model2.password2" name="password2" placeholder="{{'PASSWORD_PLACEHOLDER' | translate:AllLanguage}}" pattern="^(?=.*\d)(?=.*[!@#$%^&*'+,-_./?;:=<>~|\`])(?=.*[a-z])(?=.*[A-Z]).{8,}$" #password2="ngModel" [readonly]="isReadOnly">
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-yellow"
+                                                tooltip="{{'PASSWORD_TOOLTIP_MSG' | translate:AllLanguage}}">
+                                            <i class="fa fa-question"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div [hidden]="password2.valid || password2.pristine || !password2.errors?.pattern" class="alert alert-danger alert-icon">
+                                    <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                    {{'PASSWORD_ERROR_MSG' | translate:AllLanguage}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="confirmPassword" required [(ngModel)]="model2.confirmPassword" name="confirmPassword" #confirmPassword="ngModel" placeholder="{{'CONFIRM_PASSWORD_PLACEHOLDER' | translate:AllLanguage}}" validateEqual="password2" [readonly]="isReadOnly">
+                                       <div [hidden]="confirmPassword.valid || confirmPassword.pristine" class="alert alert-danger alert-icon">
+                                       <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                    {{'CONFIRM_PASSWORD_ERROR_MSG' | translate:AllLanguage}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <select class="form-control" id="real_estate_agent"
+                                                required
+                                                [(ngModel)]="model2.real_estate_agent" name="real_estate_agent"
+                                                #real_estate_agent="ngModel">
+                                                <option *ngFor="let real_estate_agent of real_estate_agents" [value]="real_estate_agent">{{real_estate_agent}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-yellow"
+                                                tooltip="{{'USER_TYPE_TOOLTIP_MSG' | translate:AllLanguage}}">
+                                            <i class="fa fa-question"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div [hidden]="real_estate_agent.valid || real_estate_agent.pristine" class="alert alert-danger alert-icon">
+                                    <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                    {{'USER_TYPE_ERROR_MSG' | translate:AllLanguage}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <input type="text" class="form-control" name="user_name"  [(ngModel)]="model2.user_name" #user_name="ngModel" placeholder="{{'USER_NAME_PLACEHOLDER' | translate:AllLanguage}}" required (keyup)="userNameType()">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-yellow"
+                                                tooltip="{{'USER_NAME_TOOLTIP_MSG' | translate:AllLanguage}}">
+                                            <i class="fa fa-question"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="is_user_name_exist">{{'USER_NAME_ALREADY_EXIST_MSG' | translate:AllLanguage}}</div>
+                                <div  class="emailinvalid2" *ngIf="user_name.invalid && user_name.touched">
+                                      <div  *ngIf="user_name.hasError('required')" class="alert alert-danger alert-icon">
+                                        <div class="icon-area"><img src="assets/images/alert-icon.png" class="icon"></div>
+                                        {{'USER_NAME_ERROR_MSG' | translate:AllLanguage}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="model2.real_estate_agent!='Buyer' && model2.user_name!=''">{{'YOUR_PROFILE_LINK_WILL_BE' | translate:AllLanguage}} http://inmopedia.com/beta/#/{{commonService.getSlug(model2.real_estate_agent)}}/{{model2.user_name}}</div>
+
+                            <re-captcha [(ngModel)]="formModel.captcha" name="captcha" required siteKey="6Ldo2nAUAAAAAL4jep8xG4mK1w22baGPk9bv0yY9" #captchaControl="ngModel" ></re-captcha>
+                            <div class="alert alert-danger alert-icon" [hidden]="captchaControl.valid || captchaControl.pristine" >Captcha must be solved</div>
+                            <div [hidden]="!captchaControl.valid" class="alert alert-danger alert-icon">Captcha is valid</div>
+
+
+                            <div class="text-center">
+                                <span><button type="button" class="btn btn-yellow btn-bold" (click)="formModel.captcha = ''">Reset Captcha</button></span>
+                                <span><button type="submit" class="btn btn-yellow btn-bold" [disabled]="registerForm.invalid">{{'SIGNUP_BUTTON' | translate:AllLanguage}}</button></span>
+                            </div>
+
+                            <!--<a (click)="signInWithFB()">Facebook</a> <a (click)="signInWithGoogle()">Google</a>-->
+                        </form>
+                    </div>
+                </tab>
+            </tabset>
+            <div class="spacer-medium clearfix"></div>
+            <div class="or"><span>{{'OR' | translate:AllLanguage}}</span></div>
+            <div class="spacer-medium clearfix"></div>
+            <div class="text-center">
+                <span><a (click)="signInWithGoogle()" class="btn full btn-outline-secondary btn-bold"><img src="assets/images/google.png"> {{'LOG_IN_WITH_GOOGLE' | translate:AllLanguage}}</a></span>
+                <span><a (click)="signInWithFB()" class="btn full btn-outline-secondary btn-bold"><img src="assets/images/facebook-icon.png">Log in with facebook</a></span>
+
+            </div>
+        </div>
+    </div>
+</section>
+<div class="spacer clearfix"></div>
+

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Inmopedia</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  
+	
+	
+	
+	
+  <meta property="og:url"                content="http://www.nytimes.com/2015/02/19/arts/international/when-great-minds-dont-think-alike.html" />
+  <meta property="og:type"               content="article" />
+  <meta property="og:title"              content="When Great Minds Don’t Think Alike" />
+  <meta property="og:description"        content="How much does culture influence creative thinking?" />
+  <meta property="og:image"              content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg" />
+  <script async src=http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<body>
+
+<app-root></app-root>
+
+</body>
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&key=AIzaSyA1vF-rFHcOKSa1luTeVIYF_C3CfhQr1oU&libraries=places&language=en-US"></script>
+
+</html>

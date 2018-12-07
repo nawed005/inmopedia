@@ -1,0 +1,33 @@
+<div class="spacer clearfix"></div>
+<section class="login-area" *ngIf="AllLanguage">
+    <div class="container-fluid">
+        <h2 class="text-center all-title">{{'SETTINGS' | translate:AllLanguage}}</h2>
+        <div class="spacer clearfix"></div>
+        <div class="login-inner-box">
+            <div class="ui inverted dimmer" [ngClass]="activeClass" id="workerBrowseLoader"><div class="ui loader"></div></div>
+
+
+            <div>
+                <form (ngSubmit)="onSubmit2()" #registerForm="ngForm">
+
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="password2" required [(ngModel)]="model2.password2" name="password2" #password2="ngModel" placeholder="{{'NEW_PASSWORD' | translate:AllLanguage}}" pattern="^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$">
+                               <div [hidden]="password2.valid || password2.pristine" class="alert alert-danger">
+                               {{'PASSWORD_ERROR_MSG' | translate:AllLanguage}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="confirmPassword" required [(ngModel)]="model2.confirmPassword" name="confirmPassword" #confirmPassword="ngModel" placeholder="{{'CONFIRM_NEW_PASSWORD' | translate:AllLanguage}}" validateEqual="password2">
+                           <div [hidden]="confirmPassword.valid || confirmPassword.pristine" class="alert alert-danger">
+                           {{'CONFIRM_PASSWORD_ERROR_MSG' | translate:AllLanguage}}
+                </div>
+            </div>
+
+            <div class="text-center"><button type="submit" class="btn btn-yellow btn-bold" [disabled]="!registerForm.form.valid">{{'SUBMIT' | translate:AllLanguage}}</button></div>
+        </form>
+    </div>
+
+</div>
+</div>
+</section>
+<div class="spacer clearfix"></div>

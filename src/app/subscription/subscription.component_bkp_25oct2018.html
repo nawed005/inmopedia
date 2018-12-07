@@ -1,0 +1,62 @@
+<section class="subscription-area" style="background:url(assets/images/road.jpg) no-repeat center center; background-size: cover">
+<div class="subscription-inner">
+	<div class="spacer clearfix"></div>
+	<div class="ui inverted dimmer" [ngClass]="activeClass" id="workerBrowseLoader"><div class="ui loader"></div></div>
+	<div class="container-fluid">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a routerLink="/home">{{'HOME' | translate:AllLanguage}}</a></li>
+			<li class="breadcrumb-item active">{{'SUBSCRIPTION' | translate:AllLanguage}}</li>
+		</ol>
+		<div class="spacer clearfix"></div>
+		<h2 class="text-center all-title">Choose a plan thats right for you<!--{{'subscriptionsText' | translate:subscriptions_text}}--></h2>
+		<div class="spacer clearfix"></div>
+		<ul class="subscription-list text-center">
+			<li *ngFor="let subscription of subscriptions;let first=first;" [hidden]="subscription.amount == 0.00 || subscription.plan_type == 'Addon'">
+				<div class="{{isUserSubscribe}}" >
+					<h3 class="plan text-primary font-weight-bold">{{'planTitle' | translate:subscription}}</h3>
+					<h4 class="plan-price" *ngIf="subscription.amount>0"><strong>${{subscription.amount}}</strong></h4>
+					<h4 class="plan-price" *ngIf="subscription.amount=='0.00'"><strong>{{'FREE' | translate:AllLanguage}}</strong></h4>
+					<p class="font-weight-bold">{{subscription.type}}</p>
+					<div innerHtml="{{'planDesc' | translate:subscription}}"></div>
+					<!--<input type="radio" (click)="changePaymentMethod('Stripe',subscription.id,subscriptions_text,subscription.amount)" checked>Stripe
+					<input type="radio" (click)="changePaymentMethod('PayPal',subscription.id,subscriptions_text,subscription.amount)">PayPal-->
+
+					<a class="btn btn-outline-yellow" (click)="openModal(template,subscription.id,subscriptions.text,subscription.amount)" *ngIf="subscription.amount=='0.00' && isUserSubscribe==''">{{'FREE' | translate:AllLanguage}}</a>
+					<a class="btn btn-outline-yellow disabled" (click)="openModal(template,subscription.id,subscriptions.text,subscription.amount)" *ngIf="subscription.amount=='0.00' && isUserSubscribe!=''">{{'FREE' | translate:AllLanguage}}</a>
+
+					<a class="btn btn-outline-yellow" *ngIf="subscription.amount!='0.00'&& isUserSubscribe==''" (click)="openModal(template,subscription.id,subscriptions.text,subscription.amount)">{{'SUBSCRIBE' | translate:AllLanguage}}</a>
+					<a class="btn btn-outline-yellow disabled" *ngIf="subscription.amount!='0.00' && isUserSubscribe!=''" (click)="openModal(template,subscription.id,subscriptions.text,subscription.amount)">{{'SUBSCRIBE' | translate:AllLanguage}}</a>
+
+				</div>
+				<div class="bottom-area">
+					<small>Monthly Charge</small>
+					<small>VAT not includede</small>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="spacer clearfix"></div>
+	<h2 class="text-center all-title">FREE</h2>
+	<div class="spacer-medium clearfix"></div>
+	<h4 class="text-white text-center">Post first 3 propertise for free</h4>
+	<div class="clearfix text-center">
+		<a href="#" class="btn btn-lg btn-primary">FREE SUBSCRIPTION</a>
+	</div>
+	<div class="spacer clearfix"></div>
+</div>
+</section>
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left text-center">{{'PAY_WITH' | translate:AllLanguage}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body text-center">
+        <ul class="list-inline">
+            <li class="list-inline-item align-top"><a class="btn btn-yellow" (click)="packgSubscribe()">{{'DABIT_OR_CREDIT_CARD' | translate:AllLanguage}}</a></li>
+            <li class="list-inline-item align-top">{{'OR' | translate:AllLanguage}}</li>
+            <li class="list-inline-item align-top"><ngx-paypal [config]="payPalConfig" ></ngx-paypal></li>
+        </ul>
+    </div>
+</ng-template>

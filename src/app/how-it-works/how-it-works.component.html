@@ -1,0 +1,10 @@
+<div class="container-fluid">
+<div class="spacer clearfix"></div>
+<h2>{{'pageTitle' | translate:pageData}}</h2>
+<div class="description-panel" [innerHTML]="pageData.desc_en" *ngIf="commonService.getLang()=='en'"></div>
+<div class="description-panel" [innerHTML]="pageData.desc_sp" *ngIf="commonService.getLang()=='sp'" ></div>
+<div class="spacer clearfix"></div>
+</div>
+
+
+

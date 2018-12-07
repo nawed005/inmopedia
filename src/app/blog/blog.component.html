@@ -1,0 +1,28 @@
+<section class="blog-area text-center">
+    <div class="spacer clearfix"></div>
+    <div class="container-fluid" *ngIf="AllLanguage">
+        <h2 class="all-title">{{'BLOG' | translate:AllLanguage}}</h2>
+        <div class="spacer clearfix"></div>
+        <ul class="blog-list">
+            <li *ngFor="let blog of blogs | slice:0:6; let i=index">
+                <div class="image-box">
+                    <a routerLink="/details/{{blog.blog_slug}}">
+                        <img [src]="settingData.site_url+'files/'+blog.hash+'/'+blog.name" class="img-fluid">
+                    </a>
+                </div>
+                <h6 class="date text-primary">{{blog.blog_date}} | {{blog.u_name}}</h6>
+                <h5 class="title"><a routerLink="/details/{{blog.blog_slug}}">{{'blogTitle' | translate:blog}}</a></h5>
+                <a routerLink="/details/{{blog.blog_slug}}" class="btn-more text-primary">{{'KNOW_MORE' | translate:AllLanguage}}</a>
+                <!--<ul class="blog-social list-inline">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-facebook-square"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-twitter-square"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+                </ul>-->
+            </li>
+        </ul>
+        <div class="spacer-small clearfix"></div>
+        <!--<div class="text-center"><a routerLink="" class="btn btn-yellow btn-bold">View More Blogs</a></div>-->
+    </div>
+    <div class="spacer clearfix"></div>
+</section>

@@ -1,0 +1,173 @@
+<section class="property-listings-area">
+	<div class="container-fluid">
+		<div class="tab-section property-listings-search">
+			<tabset>
+				<tab heading="Buy" id="tab1">
+					<div [hidden]="submitted" class="form-wrapper">
+						<form (ngSubmit)="onSubmit()" #propertyForm="ngForm">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<input type="text" class="form-control input-style" id="name" required [(ngModel)]="model.name" name="name" #name="ngModel" placeholder="Enter Location, Project or Landmark">
+										<div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+										Enter Location, Project or Landmark is required
+										</div>
+									</div>
+								</div>
+								<div class="col-md-2">
+								  <div class="form-group">
+									<select class="form-control select-style" id="property_type" required [(ngModel)]="model.property_type" name="property_type" #property_type="ngModel">
+									  <option *ngFor="let property_type of property_types" [value]="property_type">{{property_type}}</option>
+									</select>
+									<div [hidden]="property_type.valid || property_type.pristine" class="alert alert-danger">
+									  Property Type is required
+									</div>
+								  </div>
+								</div>
+								<div class="col-md-2">
+								  <div class="form-group">
+									<select class="form-control select-style" id="budget" required [(ngModel)]="model.budget" name="budget" #budget="ngModel">
+									  <option *ngFor="let budget of budgets" [value]="budget">{{budget}}</option>
+									</select>
+									<div [hidden]="budget.valid || budget.pristine" class="alert alert-danger">
+									  Budget is required
+									</div>
+								  </div>
+								</div>
+								<div class="col-md-2">
+									<button type="submit" class="btn button-style" [disabled]="!propertyForm.form.valid">Search</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</tab>
+				<tab heading="Rent">
+					<div [hidden]="submitted" class="form-wrapper">
+						<form (ngSubmit)="onSubmit()" #propertyForm="ngForm">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<input type="text" class="form-control input-style" id="name" required [(ngModel)]="model.name" name="name" #name="ngModel" placeholder="Enter Location, Project or Landmark">
+										<div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+										Enter Location, Project or Landmark is required
+										</div>
+									</div>
+								</div>
+								<div class="col-md-2">
+								  <div class="form-group">
+									<select class="form-control select-style" id="property_type" required [(ngModel)]="model.property_type" name="property_type" #property_type="ngModel">
+									  <option *ngFor="let property_type of property_types" [value]="property_type">{{property_type}}</option>
+									</select>
+									<div [hidden]="property_type.valid || property_type.pristine" class="alert alert-danger">
+									  Property Type is required
+									</div>
+								  </div>
+								</div>
+								<div class="col-md-2">
+								  <div class="form-group">
+									<select class="form-control select-style" id="budget" required [(ngModel)]="model.budget" name="budget" #budget="ngModel">
+									  <option *ngFor="let budget of budgets" [value]="budget">{{budget}}</option>
+									</select>
+									<div [hidden]="budget.valid || budget.pristine" class="alert alert-danger">
+									  Budget is required
+									</div>
+								  </div>
+								</div>
+								<div class="col-md-2">
+									<button type="submit" class="btn button-style" [disabled]="!propertyForm.form.valid">Search</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</tab>
+			</tabset>
+			<div class="extra-link">
+				<ul>
+					<li><a routerLink="/sell">Sell</a></li>
+					<li><a routerLink="/post-a-free-add">post a free add</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="property-list-grid">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="property-holder">
+						<ul class="propreties-listing">
+							<li *ngFor="let property of properties">
+								<div class="property-box">
+									<div class="property-image">
+										<a [routerLink]="['/property-listing-details',property.prop_slug]">
+											<div class="property-image-box">
+											<img [src]="" class="img-fluid" *ngIf="property.images.length==0">
+											<img [src]="settingsData.site_url+'files/'+property.images[0].hash+'/'+property.images[0].name" class="img-fluid" *ngIf="property.images.length>0"></div>
+											<div class="property-inner-content">
+												<div class="property-name">{{property.prop_title}}</div>
+												<div class="property-address">
+													<span><i class="fa fa-map-marker" aria-hidden="true"></i></span>{{property.prop_address}}
+												</div>
+												<hr class="line-style">
+												<div class="row">
+													<div class="col-6">
+														<div class="property-area">{{property.area}}</div>
+													</div>
+													<div class="col-6">
+														<div class="icon-box">
+															<span><img src="assets/images/bedroom2.png">{{property.no_of_bedroom}}</span>
+															<span><img src="assets/images/bathroom2.png">{{property.no_of_bath}}</span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</a>
+									</div>
+									<div class="property-lower-part">
+										<div class="row">
+											<div class="col-md-9 col-sm-9">
+												<div class="property-price"><span><i class="fa fa-usd" aria-hidden="true"></i></span>{{property.price_Sell}}</div>
+											</div>
+											<div class="col-md-3 col-sm-3">
+													<a href="#" class="favourites">
+														<i class="fa fa-heart-o" aria-hidden="true"></i>
+													</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="map-area">
+						<agm-map 
+						  [latitude]="lat"
+						  [longitude]="lng"
+						  [zoom]="zoom"
+						  [disableDefaultUI]="false"
+						  [zoomControl]="false"
+						  (mapClick)="mapClicked($event)">
+						  <agm-marker 
+							  *ngFor="let m of markers; let i = index"
+							  (markerClick)="clickedMarker(m.label, i)"
+							  [latitude]="+m.latitude"
+							  [longitude]="+m.longitude"
+							  [label]="m.label"
+							  [markerDraggable]="true"
+							  (dragEnd)="markerDragEnd(m, $event)">
+							<agm-info-window>
+							  <strong>{{m.prop_address}}</strong>
+							</agm-info-window>
+						  </agm-marker>
+						  <agm-circle [latitude]="lat + 0.3" [longitude]="lng" 
+							  [radius]="5000"
+							  [fillColor]="'red'"
+							  [circleDraggable]="true"
+							  [editable]="true">
+						  </agm-circle>
+						</agm-map>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,6 @@
+<div class="container-fluid" *ngIf="pageData">
+    <div class="spacer clearfix"></div>
+    <h2>{{pageData.title_en}}</h2>
+    <div innerHTML="{{'pageDesc' | translate:pageData}}"></div>
+    <div class="spacer clearfix"></div>
+</div>

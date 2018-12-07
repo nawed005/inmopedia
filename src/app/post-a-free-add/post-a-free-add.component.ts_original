@@ -1,0 +1,15 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-post-a-free-add',
+  templateUrl: './post-a-free-add.component.html',
+  styleUrls: ['./post-a-free-add.component.css']
+})
+export class PostAFreeAddComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}

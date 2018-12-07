@@ -1,0 +1,55 @@
+<section class="profile-area properties-page-area">
+	<div class="container-fluid">
+		<div class="spacer-small clearfix"></div>
+		<h6 class="text-danger">{{'SUBSCRIPTION_TEXT' | translate:AllLanguage}} <a routerLink="/subscription" class="btn btn-yellow">{{'SUBSCRIPTION' | translate:AllLanguage}}</a></h6>
+		<div class="spacer-small clearfix"></div>
+		<table class="properties-table table">
+			<thead class="table thead-primary table-striped">
+			  <tr>
+				<th>{{'PLAN_TITLE' | translate:AllLanguage}}</th>
+				<th>{{'SUBSCRIPTION_TYPE' | translate:AllLanguage}}</th>
+				<th>{{'PLAN_TYPE' | translate:AllLanguage}}</th>
+				<th>{{'AMOUNT' | translate:AllLanguage}}</th>
+				<th>{{'SUBSCRIBED_ON' | translate:AllLanguage}}</th>
+                                <th>{{'EXPIRED_ON' | translate:AllLanguage}}</th>
+                                <th>{{'PROPERTY_LEFT' | translate:AllLanguage}}</th>
+                                <th>{{'IS_UNSUBCRIBE' | translate:AllLanguage}}</th>
+                                <th>{{'UNSUBCRIBE_DATE' | translate:AllLanguage}}</th>
+				<th class="action-area">{{'ACTION' | translate:AllLanguage}}</th>
+				<th></th>
+				<th></th>
+				<th></th>
+			  </tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let subscription of subscriptions">
+                            <td>{{'planTitle' | translate:subscription}}</td>
+                            <td><span *ngIf="subscription.subcription_type=='Normal'">{{'NORMAL' | translate:AllLanguage}}</span>
+                            <span *ngIf="subscription.subcription_type=='Addon'">{{'ADDON' | translate:AllLanguage}}</span></td>
+                            <td><span *ngIf="subscription.plan_type=='Monthly'">{{'MONTHLY' | translate:AllLanguage}}</span>
+                            <span *ngIf="subscription.plan_type=='Yearly'">{{'YEARLY' | translate:AllLanguage}}</span></td>
+                            <td>{{subscription?.plan_amount}}</td>
+                            <td>{{subscription?.subscribed_on}}</td>
+                            <td>{{subscription?.expired_on}}</td>
+
+                            <td *ngIf="subscription?.Plan_id!=10">{{subscription.total_prop_limit-subscription.used_property}}</td>
+                            <td *ngIf="subscription?.Plan_id==10">Unlimited</td>
+
+                            <td *ngIf="subscription?.is_unsubscribe==1">{{'YES' | translate:AllLanguage}}</td>
+                            <td *ngIf="subscription?.is_unsubscribe==0">{{'NO' | translate:AllLanguage}}</td>
+
+                            <td *ngIf="subscription?.is_unsubscribe==1">{{subscription.unsubscribe_on}}</td>
+                            <td *ngIf="subscription?.is_unsubscribe==0">-</td>
+
+                            <td>
+                                <ul class="text-right list-inline">
+                                        <a class="btn btn-yellow" (click)="unsubscribe(subscription.id)" *ngIf="subscription.is_unsubscribe==0 && subscription.plan_amount!='0.000'">{{'UNSUBCRIBE' | translate:AllLanguage}}</a>
+                                </ul>
+                            </td>
+			</tr>
+			<tr *ngIf="subscriptions?.length == 0">{{'NO_RECORD_FOUND' | translate:AllLanguage}}</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="spacer clearfix"></div>
+</section>

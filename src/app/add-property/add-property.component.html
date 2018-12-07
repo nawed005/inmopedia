@@ -1,0 +1,908 @@
+<section class="add-property-area">
+    <div class="spacer clearfix"></div>
+    <div class="container-fluid">
+        <div class="property-blocks" *ngIf="AllLanguage">
+            <h2 class="all-title text-center">{{'ADD_PROPERTY' | translate:AllLanguage}}</h2>
+            <div class="spacer-medium clearfix"></div>
+            <div class="tab-container">
+                
+                <ul *ngIf="propertyForm" class="nav nav-tabs"> 
+                    <li class="nav-item" [ngClass]="{'no-pointer':!propertyForm.form.valid}" [class.active]="tabstep === 'step1'"><a [ngStyle]="{'cursor':'pointer'}" class="nav-link" [class.active]="tabstep === 'step1'" (click)="toggleTab('step1')"><span>{{'STEP1' | translate:AllLanguage}} {{'BASIC_INFO' | translate:AllLanguage}}</span></a></li>
+
+                    <li class="nav-item" [ngClass]="{'no-pointer':!propertyForm.form.valid}" [class.active]="tabstep === 'step2'"><a [ngStyle]="{'cursor':'pointer'}" class="nav-link" [class.active]="tabstep === 'step2'" (click)="toggleTab('step2')"><span>{{'STEP2' | translate:AllLanguage}} {{'LISTING_INFO' | translate:AllLanguage}}</span></a></li>
+
+                    <li class="nav-item" [ngClass]="{'no-pointer':!propertyForm.form.valid || !propertyForm2.form.valid}" [class.active]="tabstep === 'step3'"><a [ngStyle]="{'cursor':'pointer'}" class="nav-link" [class.active]="tabstep === 'step3'" (click)="toggleTab('step3')"><span>{{'STEP3' | translate:AllLanguage}} {{'MEDIA_INFO' | translate:AllLanguage}}</span></a> </li> 
+                    
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-details" [ngStyle]="{'display': tabStep1 ? 'block' : 'none'}">
+                        <div [hidden]="submitted">
+                            
+                            <form (ngSubmit)="onSubmit()" #propertyForm="ngForm">
+                                <div class="form-box">
+                                    <h6><strong class="text-danger">{{'ALL_STAR_ARE_MANDATORY' | translate:AllLanguage}}</strong></h6>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-5"><label for="property_type">{{'SELECT_YOUR_PROPERTY' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label></div>
+                                            <div class="col-md-6">
+                                                <select class="form-control" id="property_type" required [(ngModel)]="model.prop_type" name="property_type" #property_type="ngModel">
+                                                        <option value="">{{'SELECT_PROPERTY_TYPE' | translate:AllLanguage}}</option>
+                                                    <optgroup *ngFor="let property_type of propertyTypes" label="{{property_type.type_name_en}}">
+
+                                                        <option *ngFor="let property of property_type.prop" [value]="property.id">{{property.type_name_en}}</option>
+                                                    </optgroup>
+                                                </select>
+                                                <div [hidden]="property_type.valid || property_type.pristine" class="alert alert-danger">
+                                                    {{'PROPERTY_TYPE_ERR_MSG' | translate:AllLanguage}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-yellow"
+                                                    tooltip="{{'SELECT_YOUR_PROPERTY_DESC' | translate:AllLanguage}}">
+                                                <i class="fa fa-question"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-5"><label for="name">{{'SELL_OR_RENT' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label></div>
+                                        <div class="col-md-6">
+
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="inlineCheckbox1" [value]="'Sell'" [(ngModel)]="model.sell_or_rent" name="sell_or_rent" required="">
+                                                <label class="form-check-label">{{'SELL' | translate:AllLanguage}}</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="inlineCheckbox2" [value]="'Rent'" [(ngModel)]="model.sell_or_rent" name="sell_or_rent" required="">
+                                                <label class="form-check-label">{{'RENT' | translate:AllLanguage}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-yellow"
+                                                    tooltip="{{'SELL_OR_RENT_DESC' | translate:AllLanguage}}">
+                                                <i class="fa fa-question"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="recomendations-text">{{'RECOMENDATIONS_MSG' | translate:AllLanguage}}</div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <label for="address" style="margin-bottom: 0;">{{'PROPERTY_ADDRESS' | translate:AllLanguage}} <span class="text-danger astac-sign">*</span></label>
+                                            <!--<div class="clearfix"><small class="text-danger"><strong>Select from the dropdown</strong></small></div>-->
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!--<textarea rows="1" class="form-control" id="address" required [(ngModel)]="model.address" name="address" #address="ngModel"></textarea>-->
+
+                                            <ng4geo-autocomplete [userSettings]="userSettings4" (componentCallback)="autoCompleteCallback1($event)" required=''></ng4geo-autocomplete>
+
+                                            <!--<div [hidden]="address.valid || address.pristine"
+                                                             class="alert alert-danger">
+                                              Property Address is required
+                                            </div>-->
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-yellow"
+                                                    tooltip="{{'PROPERTY_ADDRESS_DESC' | translate:AllLanguage}}">
+                                                <i class="fa fa-question"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--
+                                <div class="form-group">
+                                        <div class="row">
+                                                <div class="col-md-5">
+                                                        <label for="address2">{{'PROFESSIONAL_TYPE_MSG' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                        <select class="form-control" id="question_answer"
+                                                                        required
+                                                                        [(ngModel)]="model.question_answer" name="question_answer"
+                                                                        #question_answer="ngModel">
+                                                                        <option *ngFor="let real_estate_agent of real_estate_agents" [value]="real_estate_agent">{{real_estate_agent}}</option>
+                                                        </select>
+
+                                                        <div [hidden]="question_answer.valid || question_answer.pristine" class="alert alert-danger">
+                                                                {{'ANSWER_IS_REQUIRED' | translate:AllLanguage}}
+                                                </div>
+                                        </div>
+                                </div>
+                                <p></p>
+                                
+                        </div> -->
+
+                                <div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label for="address2">{{'NAME_OF_HOUSING_COMPLEX' | translate:AllLanguage}}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control" id="housing_complex"  name="housing_complex" [(ngModel)]="model.housing_complex" #housing_complex="ngModel" placeholder="{{'NAME_OF_HOUSING_COMPLEX_PLACEHOLDER' | translate:AllLanguage}}">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-yellow"
+                                                        tooltip="{{'NAME_OF_HOUSING_COMPLEX_DESC' | translate:AllLanguage}}">
+                                                    <i class="fa fa-question"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>{{'SELECT_PROVINCE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                                        <select class="form-control" id="province" [(ngModel)]="model.province_id" name="province" (change)="changeProvince($event)" required>
+                                                            <option value="">{{'SELECT_PROVINCE' | translate:AllLanguage}}</option>
+                                                            <option *ngFor="let province of provinces" [value]="province.id">{{province.province_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>{{'SELECT_CITY' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                                        <select class="form-control" id="city" [(ngModel)]="model.city_id" name="city" required  (change)="changeCity($event)">
+                                                                <option value="">{{'SELECT_CITY' | translate:AllLanguage}}</option>
+                                                            <option *ngFor="let city of filteredCities" [value]="city.id">{{city.city_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>{{'SELECT_ZONE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                                        <select class="form-control" id="zone" [(ngModel)]="model.zone" name="zone" required>
+                                                            <option value="">{{'SELECT_ZONE' | translate:AllLanguage}}</option>
+                                                            <option *ngFor="let zone of filteredZones" [value]="zone.id">{{zone.zone_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-yellow"
+                                                    tooltip="{{'SELECT_PROVINCE_DESC' | translate:AllLanguage}}, {{'SELECT_CITY_DESC' | translate:AllLanguage}}, {{'SELECT_ZONE_DESC' | translate:AllLanguage}}">
+                                                <i class="fa fa-question"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="spacer-medium clearfix"></div>
+                            </div>
+
+                            <div class="owner-information">
+                                <div class="form-box">
+                                    <div class="spacer-medium clearfix"></div>
+                                    <h3>{{'PROPERTY_OWNER_INFORMATION' | translate:AllLanguage}}</h3>
+
+                                    <div class="spacer-medium clearfix"></div>
+                                    <!-- <div class="form-group">
+                                            <div class="row">
+                                                    <div class="col-md-5"><label for="email">{{'EMAIL' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label></div>
+                                                    <div class="col-md-7">
+                                                            <div class="form-group">
+                                                                    <input type="email" class="form-control" email name="emailField"  [(ngModel)]="model.prop_owner_email" #emailField="ngModel" placeholder="{{'EMAIL_PLACEHOLDER' | translate:AllLanguage}}">
+                                                                    <div  class="emailinvalid" *ngIf="emailField.invalid && emailField.touched">
+                                                                              <div  *ngIf="emailField.hasError('email')" class="alert alert-danger">
+                                                                                    {{'EMAIL_ERROR_MSG' | translate:AllLanguage}}
+                                                                            </div>
+                                                                    </div>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                    </div> -->
+                                    <!--<div class="form-group">
+                                                    <div class="row">
+                                                    <div class="col-md-5"><label for="confirm_email">Confirm Email</label></div>
+                                                    <div class="col-md-7">
+                                                            <div class="form-group">
+                                    <input type="email" class="form-control" email name="emailField2"  [(ngModel)]="email2" #emailField2="ngModel" placeholder="Email Address">
+                                    <div  class="emailinvalid2" *ngIf="emailField2.invalid && emailField2.touched">
+                                      <div  *ngIf="emailField2.hasError('email')" class="alert alert-danger">
+                                                    Please enter the correct email, this email not valid.
+                                      </div>
+                                    </div>
+                      </d   iv>
+                                                    </div>
+                                                    </div>
+                                    </div>-->
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label for="mobile">{{'MOBILE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                <div class="col-md-4">  
+                                                    <select id="country_dial_code" [ngStyle]="{'width':'109px'}" class="form-control" required [(ngModel)]="model.country_code" name="country_code" #country_code="ngModel">
+                                                        <option *ngFor="let code of countryDialCodes" [value]="code.code">({{code.code}})&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{code.name}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" id="mobile" minlength="6" placeholder="{{'MOBILE_PLACEHOLDER' | translate:AllLanguage}}" required [(ngModel)]="model.owner_mobile" name="mobile" [pattern]="'^[0-9]*$'" #mobile="ngModel">
+                                                </div>
+                                                </div>
+                                                       <div *ngIf="mobile.invalid && (mobile.dirty || mobile.touched)"> 
+                                                       <div class="alert alert-danger"*ngIf="mobile.errors?.required">
+                                                        {{'MOBILE_IS_REQUIRED' | translate:AllLanguage}}
+                                                    </div>  
+                                                    <div class="alert alert-danger"*ngIf="mobile.errors?.pattern">
+                                                        {{'MOBILE_IS_INVALID' | translate:AllLanguage}}
+                                                    </div> 
+                                                    <div class="alert alert-danger"*ngIf="mobile.errors?.minlength">
+                                                        {{'MOBILE_MIN_Length' | translate:AllLanguage}}
+                                                    </div>       
+                                                </div> 
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-yellow"
+                                                        tooltip="{{'MOBILE_DESC' | translate:AllLanguage}}">
+                                                    <i class="fa fa-question"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label for="phone">{{'PHONE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" id="phone" [(ngModel)]="model.owner_phone" name="phone" minlength="6" #phone="ngModel" [pattern]="'^[0-9]*$'" placeholder="{{'PHONE_PLACEHOLDER' | translate:AllLanguage}}" required="">
+                                                <div *ngIf="phone.invalid && (phone.dirty || phone.touched)"> 
+                                                    <div class="alert alert-danger"*ngIf="phone.errors?.required">
+                                                        {{'PHONE_IS_REQUIRED' | translate:AllLanguage}}
+                                                    </div> 
+                                                    <div class="alert alert-danger"*ngIf="phone.errors?.pattern">
+                                                        {{'PHONE_IS_INVALID' | translate:AllLanguage}}
+                                                    </div> 
+                                                    <div class="alert alert-danger"*ngIf="phone.errors?.minlength">
+                                                        {{'PHONE_MIN_Length' | translate:AllLanguage}}
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-yellow"
+                                                        tooltip="{{'PHONE_DESC' | translate:AllLanguage}}">
+                                                    <i class="fa fa-question"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a style="cursor: pointer" class="text-danger" (click)="addPhones = true">{{'ADD_ADDITIONAL_PHONES' | translate:AllLanguage}}</a>
+                                    <div class="form-group" *ngIf="addPhones == true">
+                                         <div class="row">
+                                            <div class="col-md-5">
+                                                <label for="phone_ex">{{'ADDITIONAL_PHONE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" id="phone_ex" name="phone_ex" minlength="6" [(ngModel)]="model.owner_phone_ex" #phone_ex="ngModel" [pattern]="'^[0-9]*$'" placeholder="{{'ADDITIONAL_PHONE_PLACEHOLDER' | translate:AllLanguage}}" required="">
+                                                <div *ngIf="phone_ex.invalid && (phone_ex.dirty || phone_ex.touched)"> 
+                                                    <div class="alert alert-danger"*ngIf="phone_ex.errors?.required">
+                                                        {{'PHONE_IS_REQUIRED' | translate:AllLanguage}}
+                                                    </div> 
+                                                    <div class="alert alert-danger"*ngIf="phone_ex.errors?.pattern">
+                                                        {{'ADDITIONAL_PHONE_INVALID' | translate:AllLanguage}}
+                                                    </div> 
+                                                    <div class="alert alert-danger"*ngIf="phone_ex.errors?.minlength">
+                                                        {{'PHONE_MIN_Length' | translate:AllLanguage}}
+                                                    </div> 
+                                                </div> 
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-yellow"
+                                                        tooltip="{{'ADDITIONAL_PHONE_DESC' | translate:AllLanguage}}">
+                                                    <i class="fa fa-question"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="spacer-medium clearfix"></div>
+                                    <!--<h3>{{'PROPERTY_OWNER_NAME' | translate:AllLanguage}}</h3>
+                                    <div class="spacer-medium clearfix"></div> -->
+                                    <!--
+                                    <div class="form-group">
+                                            <div class="row">
+                                                    <div class="col-md-5">
+                                                            <label for="first_name">{{'FIRST_NAME' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                            <input type="text" class="form-control" id="first_name" required [(ngModel)]="model.owner_first_name" name="first_name" #first_name="ngModel">
+                                                                       <div [hidden]="first_name.valid || first_name.pristine" class="alert alert-danger">
+                                                                       {{'FIRST_NAME_REQUIRED' | translate:AllLanguage}}
+                                                    </div>
+                                            </div>
+                                    </div>
+                            </div>
+                                    
+                            <div class="form-group">
+                                    <div class="row">
+                                            <div class="col-md-5">
+                                                    <label for="last_name">{{'LAST_NAME' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                    <input type="text" class="form-control" id="last_name" required [(ngModel)]="model.owner_last_name" name="last_name" #last_name="ngModel">
+                                                               <div [hidden]="last_name.valid || last_name.pristine" class="alert alert-danger">
+                                                               {{'LAST_NAME_REQUIRED' | translate:AllLanguage}}
+                                            </div>
+                                    </div>
+                            </div>
+                    </div>
+                                    -->
+                                    <div class="form-group">
+                                        <p>{{'PEOPLE_INTERESTED_YOUR_CONTACT_MSG' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></p>
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="inlineCheckbox1" [value]="'Phone and Email'" [(ngModel)]="model.notify_by" name="notify_by" required>
+                                                           <label class="form-check-label">{{'PHONE_OR_EMAIL' | translate:AllLanguage}}</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="inlineCheckbox2" [value]="'Only Phone'" [(ngModel)]="model.notify_by" name="notify_by" required>
+                                                           <label class="form-check-label">{{'ONLY_PHONE' | translate:AllLanguage}}</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="inlineCheckbox2" [value]="'Only Email'" [(ngModel)]="model.notify_by" name="notify_by" required>
+                                                           <label class="form-check-label">{{'ONLY_EMAIL' | translate:AllLanguage}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-yellow"
+                                                        tooltip="{{'PEOPLE_INTERESTED_YOUR_CONTACT_MSG_DESC' | translate:AllLanguage}}">
+                                                    <i class="fa fa-question"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="spacer-medium clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="spacer clearfix"></div>
+                            <div class="form-box">
+                                <button type="button" (click)="toggleTab('step2')" class="btn btn-yellow btn-bold btn-lg" [disabled]="!propertyForm.form.valid || model.prop_address==''">{{'SAVE_AND_CONTINUE' | translate:AllLanguage}}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="tab-details" [ngStyle]="{'display': tabStep2 ? 'block' : 'none'}">
+                    <div [hidden]="submitted">
+                        <form (ngSubmit)="onSubmit()" #propertyForm2="ngForm">
+                            <div class="form-box">
+                                <h3>{{'WHAT_PROPERTY_YO_WANT_SELL_MSG' | translate:AllLanguage}}</h3>
+                                <h6><strong class="text-danger">{{'ALL_STAR_ARE_MANDATORY' | translate:AllLanguage}}</strong></h6>
+                                <div class="spacer-medium clearfix"></div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <label for="titleField">{{'PROP_TITLE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="titleField" required [(ngModel)]="model.prop_title" name="titleField" #titleField="ngModel">
+                                                   <div [hidden]="titleField.valid || titleField.pristine" class="alert alert-danger">
+                                                   {{'PROP_TITLE_REQUIRED' | translate:AllLanguage}}
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-yellow"
+                                                tooltip="{{'PROP_TITLE_DESC' | translate:AllLanguage}}">
+                                            <i class="fa fa-question"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label for="descriptionField">{{'PROP_DESCRIPTION' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea rows="4" class="form-control" id="descriptionField" required [(ngModel)]="model.prop_desc_en" name="descriptionField" #descriptionField="ngModel"></textarea>
+                                        <div [hidden]="descriptionField.valid || descriptionField.pristine" class="alert alert-danger">
+                                            {{'PROP_DESCRIPTION_REQUIRED' | translate:AllLanguage}}
+                                    </div>
+
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-yellow"
+                                            tooltip="{{'PROP_DESCRIPTION_DESC' | translate:AllLanguage}}">
+                                        <i class="fa fa-question"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label for="address2">{{'META_TITLE' | translate:AllLanguage}}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" id="meta_title"  name="meta_title" [(ngModel)]="model.meta_title" #meta_title="ngModel" placeholder="{{'META_TITLE_PLACEHOLDER' | translate:AllLanguage}}">
+                                    <!--<div [hidden]="meta_title.valid || meta_title.pristine" class="alert alert-danger">
+                            Meta Title is required
+                            </div>-->
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-yellow"
+                                            tooltip="{{'META_TITLE_DESC' | translate:AllLanguage}}">
+                                        <i class="fa fa-question"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label for="address2">{{'META_DESCRIPTION' | translate:AllLanguage}}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" id="meta_description"  name="meta_description" [(ngModel)]="model.meta_description" #meta_description="ngModel" placeholder="{{'META_DESCRIPTION_PLACEHOLDER' | translate:AllLanguage}}">
+
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-yellow"
+                                            tooltip="{{'META_DESCRIPTION_DESC' | translate:AllLanguage}}">
+                                        <i class="fa fa-question"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" *ngIf="model.prop_type!=5 && model.prop_type!=13 && model.prop_type!=14 && model.prop_type!=15 && model.prop_type!=11" >
+                             <div class="row">
+                                <div class="col-md-5">
+                                    <label for="constructionField">{{'SQUARE_METRE_OF_CONSTRUCTION' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="constructionField" required [(ngModel)]="model.sq_metre_const" name="constructionField" #constructionField="ngModel" [pattern]="'^[0-9]*$'">
+                                           <div [hidden]="constructionField.valid || constructionField.pristine" class="alert alert-danger">
+                                           {{'SQUARE_METRE_OF_CONSTRUCTION_REQUIRED' | translate:AllLanguage}}
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-yellow"
+                                        tooltip="{{'SQUARE_METRE_OF_CONSTRUCTION_DESC' | translate:AllLanguage}}">
+                                    <i class="fa fa-question"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="model.prop_type!=5 && model.prop_type!=13 && model.prop_type!=14 && model.prop_type!=15 && model.prop_type!=11">
+                         <div class="row">
+                            <div class="col-md-5">
+                                <label for="squareMetersField">{{'GARDEN_SQUARE_METRE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="squareMetersField" required [(ngModel)]="model.sq_metre_garden" name="squareMetersField" #squareMetersField="ngModel" [pattern]="'^[0-9]*$'">
+                                       <div [hidden]="squareMetersField.valid || squareMetersField.pristine" class="alert alert-danger">
+                                       {{'GARDEN_SQUARE_METRE_REQUIRED' | translate:AllLanguage}}
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-yellow"
+                                    tooltip="{{'GARDEN_SQUARE_METRE_DESC' | translate:AllLanguage}}">
+                                <i class="fa fa-question"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="model.prop_type!=5 && model.prop_type!=13 && model.prop_type!=14 && model.prop_type!=15 && model.prop_type!=7 && model.prop_type!=8 && model.prop_type!=9 && model.prop_type!=10 && model.prop_type!=11">
+                     <div class="row">
+                        <div class="col-md-5"><label for="bedroomField">{{'BEDROOMS' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label></div>
+                        <div class="col-md-6">
+                            <select class="form-control" id="bedroomField" required [(ngModel)]="model.no_of_bedroom" name="bedroomField" #bedroomField="ngModel">
+                                    <option *ngFor="let bedroom of bedrooms" [value]="bedroom">{{bedroom}}</option>
+                            </select>
+                            <div [hidden]="bedroomField.valid || bedroomField.pristine" class="alert alert-danger">
+                                {{'BEDROOMS_REQUIRED' | translate:AllLanguage}}
+                        </div>
+
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-yellow"
+                                tooltip="{{'BEDROOMS_DESC' | translate:AllLanguage}}">
+                            <i class="fa fa-question"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="model.prop_type!=5 && model.prop_type!=13 && model.prop_type!=14 && model.prop_type!=15 && model.prop_type!=11">
+                 <div class="row">
+                    <div class="col-md-5"><label for="bathField">{{'BATH' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label></div>
+                    <div class="col-md-6">
+                        <select class="form-control" id="bathField" required [(ngModel)]="model.no_of_bath" name="bathField" #bathField="ngModel">
+                                <option *ngFor="let bath of baths" [value]="bath">{{bath}}</option>
+                        </select>
+                        <div [hidden]="bathField.valid || bathField.pristine" class="alert alert-danger">
+                            {{'BATH_REQUIRED' | translate:AllLanguage}}
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-yellow"
+                            tooltip="{{'BATH_DESC' | translate:AllLanguage}}">
+                        <i class="fa fa-question"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" *ngIf="model.prop_type!=5 && model.prop_type!=13 && model.prop_type!=14 && model.prop_type!=15 && model.prop_type!=7 && model.prop_type!=8 && model.prop_type!=9 && model.prop_type!=10 && model.prop_type!=11">
+             <div class="row">
+                <div class="col-md-5"><label for="halfBathField">{{'HALF_BATH' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label></div>
+                <div class="col-md-6">
+                    <select class="form-control" id="halfBathField" required [(ngModel)]="model.no_of_half_bath" name="halfBathField" #halfBathField="ngModel">
+                            <option *ngFor="let halfBath of halfBaths" [value]="halfBath">{{halfBath}}</option>
+                    </select>
+                    <div [hidden]="halfBathField.valid || halfBathField.pristine" class="alert alert-danger">
+                        {{'HALF_BATH_REQUIRED' | translate:AllLanguage}}
+                </div>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-yellow"
+                        tooltip="{{'HALF_BATH_DESC' | translate:AllLanguage}}">
+                    <i class="fa fa-question"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" *ngIf="model.prop_type!=5 && model.prop_type!=13 && model.prop_type!=14 && model.prop_type!=15 && model.prop_type!=11">
+         <div class="row">
+            <div class="col-md-5"><label for="halfBathField">{{'GARAGES' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label></div>
+            <div class="col-md-6">
+                <select class="form-control" id="garageField" required [(ngModel)]="model.no_of_garages" name="garageField" #garageField="ngModel">
+                        <option *ngFor="let garage of garages" [value]="garage">{{garage}}</option>
+                </select>
+                <div [hidden]="garageField.valid || garageField.pristine" class="alert alert-danger">
+                    {{'GARAGES_IS_REQUIRED' | translate:AllLanguage}}
+            </div>
+
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-yellow"
+                    tooltip="{{'GARAGES_DESC' | translate:AllLanguage}}">
+                <i class="fa fa-question"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="form-group" *ngIf="model.prop_type!=5 && model.prop_type!=13">
+     <div class="row">
+        <div class="col-md-5">
+            <label for="selectProperty">{{'IS_THIS_PROP_NEW' | translate:AllLanguage}}</label>
+        </div>
+        <div class="col-md-6">
+            <select class="form-control" id="selectProperty" name="selectProperty" [(ngModel)]="model.is_new">
+                <option value="Yes">{{'YES' | translate:AllLanguage}}</option>
+                <option value="No">{{'NO' | translate:AllLanguage}}</option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-yellow"
+                    tooltip="{{'IS_THIS_PROP_NEW_DESC' | translate:AllLanguage}}">
+                <i class="fa fa-question"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="form-group" *ngIf="model.is_new == 'No' && model.prop_type!=5 && model.prop_type!=13">
+     <div class="row">
+        <div class="col-md-5">
+            <label for="howOldPropertyField">{{'HOW_OLD_IS_YOUR_PROPERTY' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="howOldPropertyField" required [(ngModel)]="model.old_of_prop" name="howOldPropertyField" #howOldPropertyField="ngModel" [pattern]="'^[0-9]*$'">
+                   <div [hidden]="howOldPropertyField.valid || howOldPropertyField.pristine" class="alert alert-danger">
+                   How old is your property is required and it has to valid number.
+        </div>
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn btn-yellow"
+                tooltip="{{'HOW_OLD_IS_YOUR_PROPERTY_DESC' | translate:AllLanguage}}">
+            <i class="fa fa-question"></i>
+        </button>
+    </div>
+</div>
+</div>
+<div class="form-group" *ngIf="model.is_new == 'No' && model.prop_type!=5 && model.prop_type!=13">
+     <div class="row">
+        <div class="col-md-5"><label for="name">{{'IN_WHAT_SHAPE_YOUR_PROP' | translate:AllLanguage}} <span class="text-danger astac-sign">*</span></label></div>
+        <div class="col-md-6">
+            <div class="form-radio form-radio-inline">
+                <input class="form-radio-input" type="radio" id="goodShapes" name="propertyShape" [(ngModel)]="model.prop_shape" value="Its New" required="">
+                <label class="form-radio-label">{{'ITS_NEW' | translate:AllLanguage}}</label>
+            </div>
+            <div class="form-radio form-radio-inline">
+                <input class="form-radio-input" type="radio" id="goodShapes" name="propertyShape" [(ngModel)]="model.prop_shape" value="Good Shape" required="">
+                <label class="form-radio-label">{{'GOOD_SHAPE' | translate:AllLanguage}}</label>
+            </div>
+            <div class="form-radio form-radio-inline">
+                <input class="form-radio-input" type="radio" id="needsWork" name="propertyShape" [(ngModel)]="model.prop_shape" value="Needs Work" required="">
+                <label class="form-radio-label">{{'NEEDS_WORK' | translate:AllLanguage}}</label>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-yellow"
+                    tooltip="{{'IN_WHAT_SHAPE_YOUR_PROP_DESC' | translate:AllLanguage}}">
+                <i class="fa fa-question"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-5" *ngIf="model.prop_type!=5 && model.prop_type!=13 && model.prop_type!=14 && model.prop_type!=15 && model.prop_type!=11"><label for="name">{{'OTHER_CHRACTERISTICS' | translate:AllLanguage}}</label></div>
+        <div class="col-md-6" *ngIf="model.prop_type!=5 && model.prop_type!=13 && model.prop_type!=14 && model.prop_type!=15 && model.prop_type!=11">
+             <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="characterist1" value="1" (change) ="updateSelectedCharacters($event)" name="Phone Line" [attr.checked]="this.model.other_character.indexOf('Phone Line') > -1 ? '' : null">
+                       <label class="form-check-label">{{'PHONE_LINE' | translate:AllLanguage}}</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="characterist2" value="2" (change) ="updateSelectedCharacters($event)" name="Washer/dryer" [attr.checked]="this.model.other_character.indexOf('Washer/dryer') > -1 ? '' : null">
+                       <label class="form-check-label">{{'WASHER_OR_DRYER' | translate:AllLanguage}}</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="characterist3" value="3" (change) ="updateSelectedCharacters($event)" name="Maid room" [attr.checked]="this.model.other_character.indexOf('Maid room') > -1 ? '' : null">
+                       <label class="form-check-label">{{'MAID_ROOM' | translate:AllLanguage}}</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="guard4" value="4" (change) ="updateSelectedCharacters($event)" name="Guard" [attr.checked]="this.model.other_character.indexOf('Guard') > -1 ? '' : null">
+                <label class="form-check-label">{{'GUARD' | translate:AllLanguage}}</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="consierge5" value="5" (change) ="updateSelectedCharacters($event)" name="Consierge" [attr.checked]="this.model.other_character.indexOf('Consierge') > -1 ? '' : null">
+                <label class="form-check-label">{{'CONSIERGE' | translate:AllLanguage}}</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="gym6" value="6" (change) ="updateSelectedCharacters($event)" name="Gym" [attr.checked]="this.model.other_character.indexOf('Gym') > -1 ? '' : null">
+                <label class="form-check-label">{{'GYM' | translate:AllLanguage}}</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="terrace7" value="7" (change) ="updateSelectedCharacters($event)" name="Terrace" [attr.checked]="this.model.other_character.indexOf('Terrace') > -1 ? '' : null">
+                <label class="form-check-label">{{'TERRACE' | translate:AllLanguage}}</label>
+            </div>
+
+            <!--  New Garden Option added -->
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="garden8" value="8" (change) ="updateSelectedCharacters($event)" name="Garden" [attr.checked]="this.model.other_character.indexOf('Garden') > -1 ? '' : null">
+                <label class="form-check-label">{{'GARDEN' | translate:AllLanguage}}</label>
+            </div>
+            <!--  New Garden Option added -->
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="otherInput" name="otherInput" [(ngModel)]="otherInput" value="1">
+                <label class="form-check-label">{{'OTHER' | translate:AllLanguage}}</label>
+            </div>
+            <div *ngIf="otherInput" class="add-delete-field">
+                <div>
+                    <div class="form-group">
+                        <!--<input #other placeholder="Other" [(ngModel)]="myModel" (blur)="onBlurMethod($event)" name="myModel"/>-->
+                        {{'CLICK_HERE_TO_ADD' | translate:AllLanguage}}<a (click)="addContact('')" class="btn btn-primary btn-sm" style="vertical-align: top; color: #fff;"><i class="fa fa-plus"></i></a>
+                    </div>
+                    <div class="form-group" *ngFor="let contact of contacts;let index=index;">
+                         <div>
+                            <input type="text" placeholder="{{'ENTER_OTHER_OPTIOS' | translate:AllLanguage}}" [(ngModel)]="contacts[index].other" name="othercontact{{index}}" #other="ngModel"> 
+                            <a (click)="removeContact(contact)" class="btn btn-danger btn-sm" style="vertical-align: top; color: #fff;"><i class="fa fa-minus"></i></a>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-yellow"
+                    tooltip="{{'OTHER_CHRACTERISTICS_DESC' | translate:AllLanguage}}">
+                <i class="fa fa-question"></i>
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+<div class="owner-information">
+    <div class="form-box">
+        <div class="spacer-medium clearfix"></div>
+        <h3>{{'PRICE' | translate:AllLanguage}}</h3>
+        <div class="spacer-medium clearfix"></div>
+        <div class="form-group" *ngIf="model.sell_or_rent=='Sell'">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="postToSellField">{{'SELL_PRICE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                </div>
+                <div class="col-md-6">
+                    <div class="price-icon-input">
+                        <!--<span class="icon">$</span> -->
+                        <input currencyMask class="form-control" id="postToSellField" required [(ngModel)]="model.price_Sell" name="postToSellField" #postToSellField="ngModel">
+                               <div [hidden]="postToSellField.valid || postToSellField.pristine" class="alert alert-danger">
+                               <p *ngIf="postToSellField.errors?.required">
+                                {{'SELL_PRICE_REQUIRED' | translate:AllLanguage}}
+                            </p> 
+                            <!--
+                            <p *ngIf="postToSellField.errors?.pattern">
+                                    {{'SELL_PRICE_INVALID' | translate:AllLanguage}}
+                            </p>  -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-yellow"
+                            tooltip="{{'SELL_PRICE_DESC' | translate:AllLanguage}}">
+                        <i class="fa fa-question"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" *ngIf="model.sell_or_rent=='Rent'">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="postToRentField">{{'RENT_PRICE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                </div>
+                <div class="col-md-6">
+                    <div class="price-icon-input">
+                        <!--<span class="icon">$</span>-->
+                        <input currencyMask class="form-control" id="postToRentField" required [(ngModel)]="model.price_rent" name="postToRentField" #postToRentField="ngModel">
+                               <div [hidden]="postToRentField.valid || postToRentField.pristine" class="alert alert-danger">
+                               <p *ngIf="postToRentField.errors?.required">
+                                {{'RENT_PRICE_REQUIRED' | translate:AllLanguage}}
+                            </p> 
+                            <!--    
+                            <p *ngIf="postToRentField.errors?.pattern">
+                                    {{'RENT_PRICE_INVALID' | translate:AllLanguage}}
+                            </p>  -->
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-yellow"
+                            tooltip="{{'RENT_PRICE_DESC' | translate:AllLanguage}}">
+                        <i class="fa fa-question"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="monthlyExpenseField">{{'MONTHLY_EXPANSE' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></label>
+                </div>
+                <div class="col-md-6">
+                    <div class="price-icon-input">
+                        <!--<span class="icon">$</span>-->
+                        <input currencyMask class="form-control" id="monthlyExpenseField" required [(ngModel)]="model.condo_mnthly_expns" name="monthlyExpenseField" #monthlyExpenseField="ngModel">
+                               <div [hidden]="monthlyExpenseField.valid || monthlyExpenseField.pristine" class="alert alert-danger">
+                               <p *ngIf="monthlyExpenseField.errors?.required">
+                                {{'MONTHLY_EXPANSE_REQUIRED' | translate:AllLanguage}}
+                            </p> 
+                            <!--
+                            <p *ngIf="monthlyExpenseField.errors?.pattern">
+                                    {{'MONTHLY_EXPANSE_INVALID' | translate:AllLanguage}}
+                            </p>  -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-yellow"
+                            tooltip="{{'MONTHLY_EXPANSE_DESC' | translate:AllLanguage}}">
+                        <i class="fa fa-question"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="spacer-medium clearfix"></div>
+    </div>
+</div>
+<div class="spacer-medium clearfix"></div>
+<div class="form-box">
+    <button type="button" (click)="toggleTab('step3')" class="btn btn-yellow btn-bold btn-lg" [disabled]="!propertyForm2.form.valid">{{'SAVE_AND_CONTINUE' | translate:AllLanguage}}</button>
+</div>
+</form>
+</div>
+</div>
+<div class="tab-details" [ngStyle]="{'display': tabStep3 ? 'block' : 'none'}">
+    <div [hidden]="submitted">
+        <form (ngSubmit)="onSubmit()" #propertyForm3="ngForm" style="position: relative;">
+            <div class="ui inverted dimmer" [ngClass]="activeClass">
+                <div class="ui loader"></div>
+                <h4 class="loading-text">{{'YOUR_PROPTY_UPLOADING_KINLY_WAIT' | translate:AllLanguage}}</h4>
+            </div>
+            <p>{{'PIC_UPLOAD_REQUIREMENTS' | translate:AllLanguage}}</p>
+            <h4>{{'ADD_PIC_AND_VIDEO_FOR_SELL_MSG' | translate:AllLanguage}}<span class="text-danger astac-sign">*</span></h4>
+            <h3>{{'ADD_COVER_PHOTO' | translate:AllLanguage}}</h3>
+            <h3>{{'PHOTOS_RECOMENDED_SIZE_800X600_PX' | translate:AllLanguage}}</h3>
+            <div class="spacer-medium clearfix"></div>
+            <div class="preview-list">
+                <span *ngFor="let url of urls_cover;let i = index">
+                    <span class='' [dragula]='"bag-task1"'>
+                        <div class="image-box" *ngIf="(url.type | lowercase) == 'png' || (url.type | lowercase)== 'jpg' || (url.type | lowercase)== 'jpeg'">
+                             <a (click)="removeFileCover(i,url.exist)" style="cursor: pointer" class="btn btn-danger btn-close btn-sm"><i class="fa fa-trash"></i></a>
+                            <img  [src]="url.src" class="img-fluid">
+                        </div>
+                    </span>
+                    <div class="video-box" *ngIf="url.type == 'mp4'">
+                        <a style="cursor: pointer" class="btn btn-danger btn-sm" (click)="removeFileCover(i,url.exist)"><i class="fa fa-trash"></i></a>
+                        <div class="videoWrapper">
+                            <video width="320" height="240" controls >
+                                <source  [src]="url.src" type="video/ogg" >
+                            </video>
+                        </div>
+                    </div>
+                </span>
+            </div>
+            <input type="file" (change)="detectFilesCover($event)" name='single_file' required>
+            <div class="spacer clearfix"></div>
+            <h3>{{'ADD_LISTING_PHOTOS' | translate:AllLanguage}}</h3>
+            <div class="spacer-medium clearfix"></div>
+            <div class="preview-list">
+                <span *ngFor="let url of urls;let i = index">
+                    <span class='' [dragula]='"bag-task1"'>
+                        <div class="image-box" *ngIf="(url.type | lowercase) == 'png' || (url.type | lowercase)== 'jpg' || (url.type | lowercase)== 'jpeg'">
+                             <a (click)="removeFile(i,url.exist)" style="cursor: pointer" class="btn btn-danger btn-close btn-sm"><i class="fa fa-trash"></i></a>
+                            <img  [src]="url.src" class="img-fluid">
+                        </div>
+                    </span>
+                    <div class="video-box" *ngIf="url.type == 'mp4'">
+                        <a style="cursor: pointer" class="btn btn-danger btn-sm" (click)="removeFile(i,url.exist)"><i class="fa fa-trash"></i></a>
+                        <div class="videoWrapper">
+                            <video width="320" height="240" controls >
+                                <source  [src]="url.src" type="video/ogg" >
+                            </video>
+                        </div>
+                    </div>
+                </span>
+            </div>
+            <input type="file" name="multiple_file" required multiple (change)="detectFiles($event)">
+                   <div class="spacer clearfix"></div>
+            <h3>{{'ADD_VIDEOES' | translate:AllLanguage}}</h3>
+            <p>{{'VIDEO_REQUIREMENTS' | translate:AllLanguage}}</p>
+            <div class="spacer-medium clearfix"></div>
+
+            <div>
+                <div class="form-group">
+                    <!--<input style="width: 400px;" #othervideo placeholder="http://www.youtube.com/watch?v=TMEr8qohTTI"/>-->
+                    {{'CLICK_HERE_TO_ADD' | translate:AllLanguage}}<a (click)="addVideo('')" class="btn btn-primary btn-sm" style="vertical-align: top; color: #fff;"><i class="fa fa-plus"></i></a>
+                </div>
+
+                <div class="form-group video-field-area" *ngFor="let video of videos;let index = index;">
+                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="video-input-box">
+                                <input class="form-control" type="text" id="othervideo" required [(ngModel)]="videos[index].othervideo" name="othervideo{{index}}" #othervideo="ngModel" [pattern]="'^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$'" placeholder="http://www.youtube.com/watch?v=TMEr8qohTTI"> 
+
+                                       <a (click)="removeVideo(video)" class="btn btn-danger btn-delete" style="vertical-align: top; color: #fff;"><i class="fa fa-minus"></i></a>
+
+                                <div [hidden]="othervideo.valid || othervideo.pristine" class="alert alert-danger">
+                                    <p *ngIf="othervideo.errors?.required" style="margin: 0;">
+                                        {{'YOUTUBE_IS_REQUIRED' | translate:AllLanguage}}
+                                    </p> 
+
+                                    <p *ngIf="othervideo.errors?.pattern" style="margin: 0;">
+                                        {{'YOUTUBE_INVALID' | translate:AllLanguage}}
+                                    </p> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="spacer clearfix"></div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-yellow btn-bold btn-lg" [disabled]="urls_cover.length < 1 || urls.length < 1">{{'SUBMIT' | translate:AllLanguage}}</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+
+
+</div>
+</div>
+<div class="spacer clearfix"></div>
+</section>

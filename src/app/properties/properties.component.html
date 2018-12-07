@@ -1,0 +1,160 @@
+<section class="profile-area properties-page-area" *ngIf="AllLanguage && settingsData && property_lists">
+	<div class="container-fluid">
+		<div class="spacer-small clearfix"></div>
+		<h6 class="text-danger">{{'PROPERTY_PENDING_STATUS_MEANING' | translate:AllLanguage}}</h6>
+		<div class="spacer-small clearfix"></div>
+		<table class="properties-table table">
+			<thead class="table thead-primary table-striped">
+			  <tr>
+				<th></th>
+				<th>{{'PROPERTY_POST_DATE' | translate:AllLanguage}}</th>
+				<th>{{'PROPERTY_TITLE' | translate:AllLanguage}}</th>
+				<th>{{'PLAN_TITLE' | translate:AllLanguage}}</th>
+				<th>{{'PROPERTY_ADDRESS' | translate:AllLanguage}}</th>
+				<th>{{'PROPERTY_STATUS' | translate:AllLanguage}}</th>
+				<th>{{'PROPERTY_FEATURE_DETAILS' | translate:AllLanguage}}</th>
+				<th class="action-area">{{'ACTION' | translate:AllLanguage}}</th>
+				<th></th>
+				<th></th>
+				<th></th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <tr *ngFor="let property_list of property_lists">
+			   
+				<td><img [src]="settingsData?.site_url+'files/'+property_list.cover_image_file[0]?.hash+'/'+property_list.cover_image_file[0]?.name" style="height: 60px"></td>
+				<td>{{property_list.created_on}}</td>
+				<td><a [routerLink]="['/property-listing-details',property_list.prop_slug]">{{property_list.prop_title}}</a></td>
+				<td><span *ngIf="property_list.subcribed_plan!=0">{{'planTitle' | translate:property_list}}</span></td>
+				<td>{{property_list.prop_address}}</td>
+				<td *ngIf="property_list.is_verified==0"><span class="text-danger">{{'PENDING' | translate:AllLanguage}}</span></td>
+				<td *ngIf="property_list.is_verified==1"><span class="text-success">{{'APPROVED' | translate:AllLanguage}}</span></td>
+				<td *ngIf="property_list.is_featured==1"><span class="text-success">{{'PROMOTE_IN_FEATURE_PROPERTIES' | translate:AllLanguage}}</span></td>
+				<td *ngIf="property_list.is_featured==0 && property_list.feature_by_location==0">-</td>
+				<td *ngIf="property_list.feature_by_location==1"><span class="text-success">{{'PROMOTE_BY_PROVICE_CITY_AREA' | translate:AllLanguage}}</span></td>
+				<td>
+					<ul class="text-right list-inline">
+						<li class="list-inline-item"  *ngIf="property_list.is_featured==0 && property_list.is_paid==0"><a tooltip="{{'MAKE_FEATURE' | translate:AllLanguage}}" (click)="openModal(makefeature)" class="btn btn-link"><i class="fa fa-eye"></i></a></li>
+						<ng-template #makefeature>
+						  <div class="modal-header">
+							<h4 class="modal-title text-center" style="width: 100%;">{{'PROMOTE_YOUR_PROPERTY' | translate:AllLanguage}}</h4>
+							<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+						  </div>
+						  <div class="modal-body make-featured-area">
+							<p>
+								{{'PROMOTE_PROPERTY_DUMMY_TEXT' | translate:AllLanguage}}
+							</p>
+							<section class="text-center">
+							  <form #f="ngForm" (ngSubmit)="payFeature(f)">
+							  <input type="hidden" [(ngModel)]="property_list.id" name="prop_id">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="inputGroup">
+											<input id="radio1" type="radio" [(ngModel)]="featuredmodel" name="featured" value="1" required (click)="priceChange(property_list.id,1,200)">
+											<label for="radio1">{{'PROMOTE_IN_FEATURE_PROPERTIES' | translate:AllLanguage}}</label>
+										</div>
+										<h3>${{settingsData?.feature_by_prop_amnt}}</h3>
+									</div>
+									<div class="col-md-6">
+										<div class="inputGroup">
+											<input id="radio2" type="radio" [(ngModel)]="featuredmodel" name="featured" value="2" required (click)="priceChange(property_list.id,2,100)">
+											<label for="radio2">{{'PROMOTE_BY_PROVICE_CITY_AREA' | translate:AllLanguage}}</label>
+										</div>
+										<h3>{{'DOLLER_SIGN' | translate:AllLanguage}}{{settingsData?.feature_by_loc_amnt}}</h3>
+									</div>
+									
+								</div>
+								<div class="chearfix"><input type="submit" [disabled]="f.invalid" class="btn btn-primary" value="Stripe"></div>
+
+								<!--<ngx-paypal [config]="payPalConfig"></ngx-paypal> -->
+							  </form>
+							</section>
+						  </div>
+						</ng-template>
+						<li class="list-inline-item"><a tooltip="{{'EDIT' | translate:AllLanguage}}" [routerLink]="['/edit-property',property_list.prop_slug]" class="btn btn-link btn-sm"><i class="fa fa-pencil"></i></a></li>
+						<li class="list-inline-item"><a tooltip="{{'DELETE' | translate:AllLanguage}}" (click)="removeProduct(property_list.prop_slug,property_list.prop_title)" class="btn btn-link text-dark btn-sm"><i class="fa fa-trash"></i></a></li>
+						<li class="list-inline-item leads">
+							<a tooltip="{{'LEADS' | translate:AllLanguage}}" (click)="openModal(template,property_list.id,'Via Contact Form')" class="btn btn-yellow btn-sm"><i class="fa fa-bullhorn"></i></a>
+							<span class="count" *ngIf="property_list.unreadContacts.length > 0">{{property_list.unreadContacts.length}}</span>
+						</li>
+						<li class="list-inline-item request-phone leads"><a tooltip="{{'REQUEST' | translate:AllLanguage}}" (click)="openModal(phoneNumber,property_list.id,'Via Phone Request')" style="color: #fff"class="btn btn-primary  btn-sm"><i class="fa fa-comment"></i></a><span class="count" *ngIf="property_list.unreadRequests.length > 0">{{property_list.unreadRequests.length}}</span></li>
+						<ng-template #template>
+						  <div class="modal-header">
+							<h4 class="modal-title pull-left">Leads for {{property_list.prop_title}}</h4>
+							<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+						  </div>
+						  <div class="modal-body">
+							<table class="properties-table table">
+								<thead class="table thead-primary table-striped">
+								  <tr>
+									<th>{{'EMAIL' | translate:AllLanguage}}</th>
+									<th>{{'NAME' | translate:AllLanguage}}</th>
+									<th>{{'PHONE' | translate:AllLanguage}}</th>
+									<th>{{'DATE' | translate:AllLanguage}}</th>
+									<th>{{'MESSAGE' | translate:AllLanguage}}</th>
+								  </tr>
+								</thead>
+								<tbody>
+								  <tr *ngFor="let lead of property_list.contacts">
+									<td>{{lead.email}}</td>
+									<td>{{lead.name}}</td>
+									<td>{{lead.phone}}</td>
+									<td>{{lead.date}}</td>
+									<td>
+									
+									<div ng-init="limit = 50; moreShown = false">
+										{{lead.message | limitTo: limit}}{{lead.message.length > limit ? '...' : ''}}
+										<a *ngIf="lead.message.length > 50"
+										   (click)="limit=lead.message.length; moreShown = true">  {{'MORE' | translate:AllLanguage}}
+										</a>
+										<a *ngIf="moreShown"  (click)="limit=150; moreShown =    false"> {{'LESS' | translate:AllLanguage}} </a>
+									</div>
+									
+									<!--<div class="description" [ngClass]="{'full':isCollapsed == true}">{{lead.message}}</div>
+									<a (click)="isCollapsed =! isCollapsed">Read {{isCollapsed? 'less':'more'}}</a>-->
+									
+									</td>
+								  </tr>
+								  <tr *ngIf="property_list.contacts.length==0">{{'NO_RECORD_FOUND' | translate:AllLanguage}}</tr>
+								</tbody>
+							</table>
+						  </div>
+						</ng-template>
+						<ng-template #phoneNumber>
+						  <div class="modal-header">
+							<h4 class="modal-title pull-left">{{'REQUEST_PHONE_NUMBER_FOR' | translate:AllLanguage}} {{property_list.prop_title}}</h4>
+							<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+						  </div>
+						  <div class="modal-body">
+							<table class="properties-table table">
+								<thead class="table thead-primary table-striped">
+								  <tr>
+									<th>{{'EMAIL' | translate:AllLanguage}}</th>
+									<th>{{'DATE' | translate:AllLanguage}}</th>
+								  </tr>
+								</thead>
+								<tbody>
+								  <tr *ngFor="let requestEmail of property_list.requests">
+									<td>{{requestEmail.email}}</td>
+									<td>{{requestEmail.date}}</td>
+								  </tr>
+								  <tr *ngIf="property_list.requests.length==0">{{'NO_RECORD_FOUND' | translate:AllLanguage}}</tr>
+								</tbody>
+							</table>
+						  </div>
+						</ng-template>
+					</ul>
+				</td>
+			  </tr>
+			  <tr *ngIf="property_lists?.length == 0">{{'NO_RECORD_FOUND' | translate:AllLanguage}}</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="spacer clearfix"></div>
+</section>

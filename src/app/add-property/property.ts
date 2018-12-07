@@ -1,0 +1,42 @@
+export class Property {
+
+  constructor(
+    public prop_type: any,
+    public sell_or_rent: string,
+    public prop_address: string,
+    public longitude: string,
+    public latitude: string,
+    public housing_complex: string,
+    public province_id: string,
+    public city_id: string,
+    public zone: string,
+    public prop_owner_email: string,
+    public owner_mobile: string,
+    public owner_phone: string,
+    public owner_phone_ex: string,
+    public owner_first_name: string,
+    public owner_last_name: string,
+    public notify_by: string,
+    public meta_title: string,
+    public meta_description: string,
+    public prop_title: string,
+    public prop_desc_en: string,
+    public sq_metre_const: string,
+    public sq_metre_garden: string,
+    public old_of_prop: string,
+    public no_of_bedroom: number,
+    public no_of_bath: number,
+    public no_of_half_bath: number,
+    public no_of_garages: number,
+    public prop_shape: string,
+    public other_character: any[],
+    public chracter_other: any[],
+    public price_Sell: string,
+    public price_rent: string,
+    public condo_mnthly_expns: string,
+    //public question_answer: string,
+    public is_new: string
+
+  ) {  }
+
+}
